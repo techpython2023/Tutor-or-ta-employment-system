@@ -53,21 +53,14 @@
 					<h2 class="title-head">Sign Up <span>Now</span></h2>
 					<p>Login Your Account <a href="{{url_for('login')}}">Click here</a></p>
 				</div>	
-				<form class="contact-bx">
+				<form class="contact-bx" action="/register" method="POST">
 					<div class="row placeani">
+						
 						<div class="col-lg-12">
 							<div class="form-group">
 								<div class="input-group">
-									<label>Your Name</label>
-									<input name="dzName" type="text" required="" class="form-control">
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="form-group">
-								<div class="input-group">
-									<label>Your Email Address</label>
-									<input name="dzName" type="email" required="" class="form-control">
+									<label>Your dut Email Address</label>
+									<input name="email" type="email" required="required" id="email"  class="form-control">
 								</div>
 							</div>
 						</div>
@@ -75,10 +68,16 @@
 							<div class="form-group">
 								<div class="input-group"> 
 									<label>Your Password</label>
-									<input name="dzEmail" type="password" class="form-control" required="">
+									<input name="password" type="password" class="form-control" id="password" required="required">
 								</div>
 							</div>
 						</div>
+						{% for users in users %}
+
+
+						<h3 style="color:red">kkkkk {{users.email}}</h3>
+
+						{% endfor %}
 						<div class="col-lg-12 m-b30">
 							<button name="submit" type="submit" value="Submit" class="btn button-md">Sign Up</button>
 							<button name="submit" type="submit" onclick="location.href='{{url_for('index')}}'" value="Submit" class="btn button-md"> BACK TO HOME PAGE</button>
