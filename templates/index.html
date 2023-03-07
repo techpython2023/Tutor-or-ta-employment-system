@@ -22,6 +22,8 @@
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/vendors/revolution/css/layers.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/vendors/revolution/css/settings.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/vendors/revolution/css/navigation.css')}}">
+
+	
 </head>
 <body id="bg">
 <div class="page-wraper">
@@ -37,8 +39,8 @@
 					</div>
 					<div class="topbar-right">
 						<ul>
-							<li><a href="#">Login</a></li>
-							<li><a href="#">Register</a></li>
+							<li><a href="{{url_for('login')}}">Login</a></li>
+							<li><a href="{{url_for('register')}}">Register</a></li>
 						</ul>
 					</div>
 				</div>
