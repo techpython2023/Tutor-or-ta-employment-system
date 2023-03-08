@@ -41,8 +41,14 @@
 						<ul>
 							{% if current_user.is_authenticated %}
 							
+								<li><a href="{{url_for('logout')}}">Logout</a></li>
+								<li><a href="{{url_for('register')}}">{{ current_user.email }}</a></li>
+
+								{% else %}
 								<li><a href="{{url_for('login')}}">Login</a></li>
 								<li><a href="{{url_for('register')}}">Register</a></li>
+
+
 							{% endif%}
 
 						</ul>
@@ -55,7 +61,7 @@
                 <div class="container clearfix">
 					<!-- Header Logo ==== -->
 					<div class="menu-logo">
-						<a href="#"> <h5 style="color:white;margin-top: 8px;">Tech pythons</h4> </a>
+						<a href="{{url_for('index')}}"> <h5 style="color:white;margin-top: 8px;">Tech pythons</h4> </a>
 					</div>
 					<!-- Mobile Nav Button ==== -->
                     <button class="navbar-toggler collapsed menuicon justify-content-end" type="button" data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +89,7 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="active"><a href="javascript:;">Home <i class="fa fa-chevron-down"></i></a>
+							<li class="active"><a href="{{url_for('index')}}">Home <i class="fa fa-chevron-down"></i></a>
 								
 							</li>
 							
@@ -91,30 +97,16 @@
 								
 							</li>
 							
-							<li class="nav-dashboard"><a href="javascript:;">Role Dashboard <i class="fa fa-chevron-down"></i></a>
-								<ul class="sub-menu">
-									<li><a href="#">Dashboard</a></li>
-									<li><a href="#">Add Listing</a></li>
-									<li><a href="#">Bookmark</a></li>
-									<li><a href="#">Courses</a></li>
-									<li><a href="#">Review</a></li>
-									<li><a href="#">Teacher Profile</a></li>
-									<li><a href="#">User Profile</a></li>
-									<li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
-										<ul class="sub-menu">
-											<li><a href="#">Basic Calendar</a></li>
-											<li><a href="#">List View Calendar</a></li>
-										</ul>
-									</li>
-									<li><a href="javascript:;">Mailbox<i class="fa fa-angle-right"></i></a>
-										<ul class="sub-menu">
-											<li><a href="#">Mailbox</a></li>
-											<li><a href="#">Compose</a></li>
-											<li><a href="#">Mail Read</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
+
+							{% if current_user.is_authenticated and current_user.userrole == 'admin' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('admin')}}">Admin Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
+								
+							{% endif%}
+
+							
 						</ul>
 						
                     </div>
