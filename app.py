@@ -64,6 +64,18 @@ class Department(db.Model):
 
     def __repr__(self):
         return 'Department %r' %self.id
+    
+
+class Course(db.Model):
+    __tablename__ ='courses'
+
+    id = db.Column(db.Integer,primary_key =True)
+    name = db.Column(db.String(200),nullable=False)
+    department_name =db.Column(db.String(200),nullable=False)
+    department_id = db.Column(db.Integer,nullable=False)
+
+    def __repr__(self):
+        return 'Course %r' %self.id
 
 
     
@@ -227,6 +239,40 @@ def departments():
         departments =Department.query.all()
         faculties = Faculty.query.all()
         return render_template('admin/departments.html',departments=departments,faculties= faculties)
+
+
+
+
+
+
+@app.route('/courses',methods=['POST','GET'])
+def courses():
+
+    if request.method =='POST':
+        name = request.form['name']
+        dep_name = request.form['department_name']
+        dep_id = 2
+
+        new_course = Course(name =name,department_name = dep_name,department_id=1)
+
+        try:
+            db.session.add(new_course)
+            db.session.commit()
+
+            departments = Department.query.all()
+            courses = Course.query.all()
+
+            return render_template('admin/courses.html',departments=departments,courses=courses)
+        
+        except:
+            return 'The was an issue adding course'
+
+
+
+    else:
+        departments =Department.query.all()
+        courses = Course.query.all()
+        return render_template('admin/courses.html',departments=departments,courses= courses)
 
 
 
