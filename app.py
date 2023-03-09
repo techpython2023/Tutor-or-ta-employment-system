@@ -76,6 +76,18 @@ class Course(db.Model):
 
     def __repr__(self):
         return 'Course %r' %self.id
+    
+
+class Module(db.Model):
+    __tablename__ ='modules'
+
+    id = db.Column(db.Integer,primary_key =True)
+    name = db.Column(db.String(200),nullable=False)
+    course_name =db.Column(db.String(200),nullable=False)
+    course_id = db.Column(db.Integer,nullable=False)
+
+    def __repr__(self):
+        return 'Module %r' %self.id
 
 
     
@@ -256,9 +268,9 @@ def courses():
         new_course = Course(name =name,department_name = dep_name,department_id=1)
 
         try:
+
             db.session.add(new_course)
             db.session.commit()
-
             departments = Department.query.all()
             courses = Course.query.all()
 
@@ -273,6 +285,71 @@ def courses():
         departments =Department.query.all()
         courses = Course.query.all()
         return render_template('admin/courses.html',departments=departments,courses= courses)
+
+
+
+
+@app.route('/modules',methods=['POST','GET'])
+def modules():
+
+    if request.method =='POST':
+        name = request.form['name']
+        co_name = request.form['course_name']
+        co_id = 2
+
+        new_module = Module(name =name,course_name = co_name,course_id=co_id)
+
+        try:
+            db.session.add(new_module)
+            db.session.commit()
+
+            courses = Course.query.all()
+            modules = Module.query.all()
+
+            return render_template('admin/modules.html',courses = courses , modules = modules)
+        
+        except:
+            return 'The was an issue adding module'
+
+
+
+    else:
+        modules =Module.query.all()
+        courses = Course.query.all()
+
+
+        return render_template('admin/modules.html',modules = modules, courses = courses)
+
+
+
+
+@app.route('/staff',methods=['POST','GET'])
+def staff():
+
+    if request.method =='POST':
+        email = request.form['email'].lower()
+        password = request.form['password']
+        userrole = request.form['userrole']
+
+        new_user = User(email = email, password= password, userrole =  userrole)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+
+            users = User.query.all()
+
+            return render_template('admin/staff.html',users = users)
+        
+        except:
+            return 'The was an issue adding user'
+
+
+
+    else:
+
+        users = User.query.all()
+        return render_template('admin/staff.html',users = users)
 
 
 
