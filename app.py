@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from datetime import datetime
 from wtforms.validators  import InputRequired, Length, ValidationError
+import getpass
 
 # app = Flask(__name__)
 
@@ -88,6 +89,18 @@ class Module(db.Model):
 
     def __repr__(self):
         return 'Module %r' %self.id
+    
+
+class Departmenthod(db.Model):
+    __tablename__ ='departmenthods'
+
+    id = db.Column(db.Integer,primary_key =True)
+    department_name = db.Column(db.String(200),nullable=False)
+    department_id =db.Column(db.Integer,nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
+
+    def __repr__(self):
+        return 'Departmenthod %r' %self.id
 
 
     
@@ -134,6 +147,9 @@ def login():
                     
                 if user.userrole == 'admin':
                     return redirect(url_for('admin'))
+                
+                if user.userrole == 'hod':
+                    return redirect(url_for('hoddash'))
 
                 else:
 
@@ -237,10 +253,13 @@ def departments():
             db.session.add(new_department)
             db.session.commit()
 
+
+            dep = Departmenthod.query.all()
+
             departments = Department.query.all()
             faculties = Faculty.query.all()
 
-            return render_template('admin/departments.html',departments=departments,faculties= faculties)
+            return render_template('admin/departments.html',departments=departments,faculties= faculties,dep=dep)
         
         except:
             return 'The was an issue adding department'
@@ -248,9 +267,12 @@ def departments():
 
 
     else:
+
+        dep = Departmenthod.query.all()
         departments =Department.query.all()
         faculties = Faculty.query.all()
-        return render_template('admin/departments.html',departments=departments,faculties= faculties)
+        return render_template('admin/departments.html',departments=departments,faculties= faculties,dep=dep)
+        
 
 
 
@@ -355,6 +377,110 @@ def staff():
 
 
 
+
+@app.route('/departmenthods/<id>',methods=['POST','GET'])
+def departmenthods(id):
+
+    if request.method =='POST':
+
+        dep_name = request.form['dep_name'].lower()
+        dep_id = request.form['dep_id']
+        hod_email = request.form['hod_email']
+
+        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        try:
+            db.session.add(new_hod)
+            db.session.commit()
+
+            dephods = Departmenthod.query.all()
+
+            return render_template('admin/departmenthods.html',dephods = dephods)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+        dep = Department.query.filter_by(id = id).all()
+        hods = User.query.filter_by(userrole = 'hod').all()
+
+        return render_template('admin/departmenthods.html',deps = dep, hods= hods)
+
+
+
+
+
+
+
+
+@app.route('/hoddash',methods=['POST','GET'])
+def hoddash():
+
+    if request.method =='POST':
+
+        dep_name = request.form['dep_name'].lower()
+        dep_id = request.form['dep_id']
+        hod_email = request.form['hod_email']
+
+        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        try:
+            db.session.add(new_hod)
+            db.session.commit()
+
+            dephods = Departmenthod.query.all()
+
+            return render_template('hod/hoddash.html',dephods = dephods)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+       
+
+        return render_template('hod/hoddash.html')
+    
+
+
+
+
+
+
+@app.route('/assignlecturer',methods=['POST','GET'])
+def assignlecturer():
+
+    if request.method =='POST':
+
+        dep_name = request.form['dep_name'].lower()
+        dep_id = request.form['dep_id']
+        hod_email = request.form['hod_email']
+
+        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        try:
+            db.session.add(new_hod)
+            db.session.commit()
+
+            dephods = Departmenthod.query.all()
+
+            return render_template('hod/assignlecturer.html',dephods = dephods)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+       
+
+        return render_template('hod/assignlecturer.html')
 
 
 

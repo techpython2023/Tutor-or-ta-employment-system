@@ -3,8 +3,7 @@
 
 <head>
 
-	<title>Tech pythons : Admin-departments </title>
-	
+	<title>Tech pythons : Admin-courses </title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	
@@ -98,13 +97,17 @@
 							<li class="add-mega-menu"><a href="{{url_for('faculties')}}">Faculties</a>
 								
 							</li>
-							<li class="active"><a href="{{url_for('departments')}}">Departments</a>
+							<li class="add-mega-menu"><a href="{{url_for('departments')}}">Departments</a>
 								
 							</li>
-							<li class="add-mega-menu"><a href="{{url_for('courses')}}">Courses</a>
+							<li class="active"><a href="{{url_for('courses')}}">Courses</a>
 								
 							</li>
 							<li class="add-mega-menu"><a href="{{url_for('modules')}}">Modules</a>
+								
+							</li>
+
+                            <li class="add-mega-menu"><a href="{{url_for('staff')}}">Staff</a>
 								
 							</li>
 							
@@ -122,7 +125,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Departments</h1>
+                    <h1 class="text-white">Staff members</h1>
 				 </div>
             </div>
         </div>
@@ -136,103 +139,38 @@
 						<div >
 
                             <div>
-                                <h2>Add department</h2>
+                                <h2>Assign hod</h2>
                             </div>
-							<form action="departments" method="POST">
-                                <label>Department name: </label>
-                                <input type="text" required class="form-control" placeholder="Faculty name"  name="name" id="name" />
+                            
+							<form action="departmenthods" method="POST">
+                                <label>select hod: </label>
+                                <select  placeholder="select department" style="width:40%" name="hod_email" id="hod_name">
 
-                                <label>Select faculty </label>
-
-                                <select  placeholder="select faculty" style="width:40%"name="faculty_name" id="faculty_name">
-
-                                    {% for faculties in faculties %}
-                                        <option value="{{faculties.name}}">{{faculties.name}}</option>
+                                    {% for hods in hods %}
+                                        <option value="{{hods.email}}">{{hods.email}}</option>
 
                                     {% endfor %}
                                 </select>
 
+                                <label>Department </label>
+
+                                
+                                {% for dep in deps %}
+
+                                    <input type="text" class="form-control" name="dep_name" required="required" value="{{dep.name}}" readonly/>
+                                {% endfor %}
+
+								{% for dep in deps %}
+
+                                    <input type="hidden" class="form-control" name="dep_id" required="required" value="{{dep.id}}" readonly/>
+                                {% endfor %}
+
+                               
                               
                                 <br>
                                 <br>
-
-                                <input type="submit" value="Submit" class="btn btn-success">
-
-
+                                    <input type="submit" value="Submit" class="btn btn-success">
                                 <hr>
-
-
-                                <h3>
-                                    List of departments
-                                </h3>
-                                <table>
-                                    <tr>
-                                        <th>
-                                            Department name
-                                        </th>
-                                        <th>
-                                            Faculty name
-                                        </th>
-                                       
-
-                                        <th>
-
-                                        </th>
-                                    </tr>
-									{% set st = 'false' %}
-
-
-
-                                    {% for departments in departments %}
-
-                                    <tr>
-
-                                        <td>
-                                            {{departments.name}}
-                                        </td>
-                                        <th>
-                                            {{departments.faculty_name}}
-
-                                        </th>
-                                        
-                                        <td>
-
-											{%for dep in dep%}
-
-											
-
-												{% if dep.id == departments.id %} 
-
-													<a href="{{url_for('departmenthods',id='')}}{{departments.id}}"  class="btn btn-secondry">Hod details</a> 
-													
-													{% set st = 'true' %}
-	
-
-												{% endif %}
-
-											
-												
-											{% endfor %}
-
-
-
-                                            <a href="" class="btn btn-secondry">Courses</a> 
-
-                                        </td>
-
-										<td>
-											
-
-										</td>
-                                    </tr>
-
-						            {% endfor %}
-                                    
-                                    
-                                </table>
-                                
-
-
 
 
                             </form>
@@ -366,5 +304,4 @@
 <script src="{{url_for('static', filename='assets/js/contact.js')}}"></script>
 <script src="{{url_for('static', filename='assets/vendors/switcher/switcher.js')}}"></script>
 </body>
-
 </html>

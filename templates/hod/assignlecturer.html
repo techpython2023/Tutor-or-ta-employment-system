@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>Tech pythons : Admin-departments </title>
+	<title>Tech pythons : Admin-courses </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
@@ -91,22 +91,22 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="add-mega-menu"><a href="{{url_for('admin')}}">Admin portal </a>
+							<li class="add-mega-menu"><a href="{{url_for('hoddash')}}">Hod portal </a>
 								
 							</li>
 							
-							<li class="add-mega-menu"><a href="{{url_for('faculties')}}">Faculties</a>
+							<li class="add-mega-menu"><a href="{{url_for('assignlecturer')}}">Assign Lecturer</a>
+								
+							<!-- </li>
+							<li class="add-mega-menu"><a href="{{url_for('departments')}}">Departments</a>
 								
 							</li>
-							<li class="active"><a href="{{url_for('departments')}}">Departments</a>
-								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('courses')}}">Courses</a>
+							<li class="active"><a href="{{url_for('courses')}}">Courses</a>
 								
 							</li>
 							<li class="add-mega-menu"><a href="{{url_for('modules')}}">Modules</a>
 								
-							</li>
+							</li> -->
 							
 						</ul>
 						
@@ -122,7 +122,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Departments</h1>
+                    <h1 class="text-white">Assign Lecturer</h1>
 				 </div>
             </div>
         </div>
@@ -136,18 +136,18 @@
 						<div >
 
                             <div>
-                                <h2>Add department</h2>
+                                <h2>Add course</h2>
                             </div>
-							<form action="departments" method="POST">
-                                <label>Department name: </label>
-                                <input type="text" required class="form-control" placeholder="Faculty name"  name="name" id="name" />
+							<form action="courses" method="POST">
+                                <label>Course name: </label>
+                                <input type="text" required class="form-control" placeholder="Course name"  name="name" id="name" />
 
-                                <label>Select faculty </label>
+                                <label>Select department </label>
 
-                                <select  placeholder="select faculty" style="width:40%"name="faculty_name" id="faculty_name">
+                                <select  placeholder="select department" style="width:40%" name="department_name" id="department_name">
 
-                                    {% for faculties in faculties %}
-                                        <option value="{{faculties.name}}">{{faculties.name}}</option>
+                                    {% for departments in departments %}
+                                        <option value="{{departments.name}}">{{departments.name}}</option>
 
                                     {% endfor %}
                                 </select>
@@ -163,15 +163,15 @@
 
 
                                 <h3>
-                                    List of departments
+                                    List of courses
                                 </h3>
                                 <table>
                                     <tr>
                                         <th>
-                                            Department name
+                                            Course name
                                         </th>
                                         <th>
-                                            Faculty name
+                                            Department name
                                         </th>
                                        
 
@@ -179,51 +179,22 @@
 
                                         </th>
                                     </tr>
-									{% set st = 'false' %}
 
-
-
-                                    {% for departments in departments %}
+                                    {% for courses in courses %}
 
                                     <tr>
 
                                         <td>
-                                            {{departments.name}}
+                                            {{courses.name}}
                                         </td>
                                         <th>
-                                            {{departments.faculty_name}}
+                                            {{courses.department_name}}
 
                                         </th>
                                         
                                         <td>
-
-											{%for dep in dep%}
-
-											
-
-												{% if dep.id == departments.id %} 
-
-													<a href="{{url_for('departmenthods',id='')}}{{departments.id}}"  class="btn btn-secondry">Hod details</a> 
-													
-													{% set st = 'true' %}
-	
-
-												{% endif %}
-
-											
-												
-											{% endfor %}
-
-
-
-                                            <a href="" class="btn btn-secondry">Courses</a> 
-
+                                            <a href="" class="btn btn-secondry">Modules</a> 
                                         </td>
-
-										<td>
-											
-
-										</td>
                                     </tr>
 
 						            {% endfor %}
