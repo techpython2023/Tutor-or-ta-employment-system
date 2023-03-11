@@ -204,6 +204,7 @@
 												{% if dep.id == departments.id %} 
 
 													<a href="{{url_for('departmenthods',id='')}}{{departments.id}}"  class="btn btn-secondry">Hod details</a> 
+
 													
 													{% set st = 'true' %}
 	
@@ -215,6 +216,7 @@
 											{% endfor %}
 
 
+											<a href="{{url_for('departmenthods',id='')}}{{departments.id}}"  class="btn btn-secondry">Assign hod</a> 
 
                                             <a href="" class="btn btn-secondry">Courses</a> 
 

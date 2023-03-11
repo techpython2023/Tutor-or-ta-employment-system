@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>Tech pythons : Admin-courses </title>
+	<title>Tech pythons : hod-portal </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
@@ -95,18 +95,6 @@
 								
 							</li>
 							
-							<li class="add-mega-menu"><a href="{{url_for('assignlecturer')}}">Assign Lecturer</a>
-								
-							<!-- </li>
-							<li class="add-mega-menu"><a href="{{url_for('departments')}}">Departments</a>
-								
-							</li>
-							<li class="active"><a href="{{url_for('courses')}}">Courses</a>
-								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('modules')}}">Modules</a>
-								
-							</li> -->
 							
 						</ul>
 						
@@ -136,18 +124,24 @@
 						<div >
 
                             <div>
-                                <h2>Add course</h2>
                             </div>
-							<form action="courses" method="POST">
-                                <label>Course name: </label>
-                                <input type="text" required class="form-control" placeholder="Course name"  name="name" id="name" />
+							<form action="assignlecturer" method="POST">
 
-                                <label>Select department </label>
+                                <label>Select module :</label>
+								<select  placeholder="select lecture" style="width:40%" name="mod_id" id="mod_id">
 
-                                <select  placeholder="select department" style="width:40%" name="department_name" id="department_name">
+                                    {% for mod in mod %}
+                                        <option value="{{mod.id}}">{{mod.name}}</option>
+                                    {% endfor %}
 
-                                    {% for departments in departments %}
-                                        <option value="{{departments.name}}">{{departments.name}}</option>
+                                </select>
+
+                                <label>Select lecture :</label>
+
+                                <select  placeholder="select department" style="width:40%" name="lec_id" id="lec_id">
+
+                                    {% for lecs in lecs %}
+                                        <option value="{{lecs.id}}">{{lecs.email}}</option>
 
                                     {% endfor %}
                                 </select>
@@ -163,38 +157,34 @@
 
 
                                 <h3>
-                                    List of courses
+                                    List of modules
                                 </h3>
                                 <table>
                                     <tr>
                                         <th>
-                                            Course name
+                                            module name
                                         </th>
                                         <th>
-                                            Department name
+                                             lecture email 
                                         </th>
                                        
 
-                                        <th>
-
-                                        </th>
+                                       
                                     </tr>
 
-                                    {% for courses in courses %}
+                                    {% for modlec in modlec %}
 
                                     <tr>
 
                                         <td>
-                                            {{courses.name}}
+                                            {{modlec.module_name}}
                                         </td>
                                         <th>
-                                            {{courses.department_name}}
+                                            {{modlec.Lecture_email}}
 
                                         </th>
                                         
-                                        <td>
-                                            <a href="" class="btn btn-secondry">Modules</a> 
-                                        </td>
+                                        
                                     </tr>
 
 						            {% endfor %}

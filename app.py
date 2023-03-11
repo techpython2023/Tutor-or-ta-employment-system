@@ -4,6 +4,11 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from datetime import datetime
 from wtforms.validators  import InputRequired, Length, ValidationError
 import getpass
+import urllib.parse
+import requests
+
+from urllib import parse
+
 
 # app = Flask(__name__)
 
@@ -443,9 +448,11 @@ def hoddash():
             db.session.add(new_hod)
             db.session.commit()
 
-            dephods = Departmenthod.query.all()
+            hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').all()
 
-            return render_template('hod/hoddash.html',dephods = dephods)
+            coz = Course.query.filter_by(dep_name = hodcoz.department_name).all()
+
+            return render_template('hod/hoddash.html',coz = coz)
         
         except:
             return 'There was an issue assigning'
@@ -454,9 +461,12 @@ def hoddash():
 
     else:
 
-       
+       hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').first()
 
-        return render_template('hod/hoddash.html')
+       coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
+
+       return render_template('hod/hoddash.html',coz = coz)
+
     
 
 
@@ -467,23 +477,39 @@ def hoddash():
 @app.route('/assignlecturer',methods=['POST','GET'])
 def assignlecturer():
 
+
+
     if request.method =='POST':
 
-        lec_email = request.form['lec_email'].lower()
+        uss = User.query.filter_by(id =request.form['lec_id']).first()
+        modd = Module.query.filter_by(id = request.form['mod_id'] ).first()
+
+        lec_email = uss.email
         lec_id = request.form['lec_id']
-        mod_name = request.form['mod_name']
+        mod_name = modd.name
         mod_id = request.form['mod_id']
 
 
-        lec_mod = Modulelecture(module_name = mod_name, module_id = mod_id, lecture_id = lec_id,lecture_email=lec_email)
+
+
+        lec_mod = Modulelecture(module_name = mod_name, module_id = mod_id, lecture_id = lec_id,Lecture_email=lec_email)
 
         try:
             db.session.add(lec_mod)
             db.session.commit()
+            
+            url = request.url        
+            query_def=parse.parse_qs(parse.urlparse(url).query)['coz'][0]
+            cc = query_def
 
             modlec = Modulelecture.query.all()
 
-            return render_template('hod/assignlecturer.html',modlec = modlec)
+            mod = Module.query.filter_by(course_name = cc ).all()
+
+            lecs = User.query.filter_by(userrole ='lecture').all()
+
+
+            return render_template('hod/assignlecturer.html',modlec = modlec,lecs= lecs,mod = mod)
         
         except:
             return 'There was an issue assigning'
@@ -492,9 +518,17 @@ def assignlecturer():
 
     else:
 
-       
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['coz'][0]
+        cc = query_def
 
-        return render_template('hod/assignlecturer.html')
+        modlec = Modulelecture.query.all()
+
+        mod = Module.query.filter_by(course_name = cc ).all()
+
+        lecs = User.query.filter_by(userrole ='lecture').all()
+
+        return render_template('hod/assignlecturer.html',modlec = modlec,lecs= lecs,mod = mod)
 
 
 
