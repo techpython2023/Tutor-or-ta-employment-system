@@ -103,6 +103,18 @@ class Departmenthod(db.Model):
         return 'Departmenthod %r' %self.id
 
 
+class Modulelecture(db.Model):
+    __tablename__ ='modulelectures'
+
+    id = db.Column(db.Integer,primary_key =True)
+    Lecture_email = db.Column(db.String(200),nullable=False)
+    module_name =db.Column(db.String(200),nullable=False)
+    module_id =db.Column(db.Integer,nullable=False)
+    lecture_id =db.Column(db.Integer,nullable=False)
+    
+
+    def __repr__(self):
+        return 'Modulelecture %r' %self.id
     
 
 
@@ -457,19 +469,21 @@ def assignlecturer():
 
     if request.method =='POST':
 
-        dep_name = request.form['dep_name'].lower()
-        dep_id = request.form['dep_id']
-        hod_email = request.form['hod_email']
+        lec_email = request.form['lec_email'].lower()
+        lec_id = request.form['lec_id']
+        mod_name = request.form['mod_name']
+        mod_id = request.form['mod_id']
 
-        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        lec_mod = Modulelecture(module_name = mod_name, module_id = mod_id, lecture_id = lec_id,lecture_email=lec_email)
 
         try:
-            db.session.add(new_hod)
+            db.session.add(lec_mod)
             db.session.commit()
 
-            dephods = Departmenthod.query.all()
+            modlec = Modulelecture.query.all()
 
-            return render_template('hod/assignlecturer.html',dephods = dephods)
+            return render_template('hod/assignlecturer.html',modlec = modlec)
         
         except:
             return 'There was an issue assigning'
