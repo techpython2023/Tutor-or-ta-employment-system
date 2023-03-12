@@ -167,6 +167,9 @@ def login():
                 
                 if user.userrole == 'hod':
                     return redirect(url_for('hoddash'))
+                
+                if user.userrole == 'lecture':
+                    return redirect(url_for('lecturedash'))
 
                 else:
 
@@ -448,9 +451,11 @@ def hoddash():
             db.session.add(new_hod)
             db.session.commit()
 
-            hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').all()
+            user = current_user.email
 
-            coz = Course.query.filter_by(dep_name = hodcoz.department_name).all()
+            hodcoz = Departmenthod.query.filter_by(hod_email = user ).first()
+
+            coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
 
             return render_template('hod/hoddash.html',coz = coz)
         
@@ -460,8 +465,10 @@ def hoddash():
 
 
     else:
+       
+       user = current_user.email
 
-       hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').first()
+       hodcoz = Departmenthod.query.filter_by(hod_email = user ).first()
 
        coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
 
@@ -521,6 +528,7 @@ def assignlecturer():
         url = request.url        
         query_def=parse.parse_qs(parse.urlparse(url).query)['coz'][0]
         cc = query_def
+       
 
         modlec = Modulelecture.query.all()
 
@@ -529,6 +537,51 @@ def assignlecturer():
         lecs = User.query.filter_by(userrole ='lecture').all()
 
         return render_template('hod/assignlecturer.html',modlec = modlec,lecs= lecs,mod = mod)
+
+
+
+
+
+
+
+
+@app.route('/lecturedash',methods=['POST','GET'])
+def lecturedash():
+
+    if request.method =='POST':
+
+        dep_name = request.form['dep_name'].lower()
+        dep_id = request.form['dep_id']
+        hod_email = request.form['hod_email']
+
+        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        try:
+            db.session.add(new_hod)
+            db.session.commit()
+
+            hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').all()
+
+            coz = Course.query.filter_by(dep_name = hodcoz.department_name).all()
+
+            return render_template('lecture/lecturedash.html',coz = coz)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+       
+       user = current_user.email
+
+       modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
+
+       return render_template('lecture/lecturedash.html',modlec = modlec)
+
+    
+
+
 
 
 
