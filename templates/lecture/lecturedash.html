@@ -155,10 +155,10 @@
 								<div class="profile-tabnav">
 									<ul class="nav nav-tabs">
 										<li class="nav-item">
-											<a class="nav-link active" data-toggle="tab" href="#courses"><i class="ti-book"></i>Courses</a>
+											<a class="nav-link active" data-toggle="tab" href="#courses"><i class="ti-book"></i>Modules</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#quiz-results"><i class="ti-bookmark-alt"></i>Quiz Results </a>
+											<a class="nav-link" data-toggle="tab" href="#quiz-results"><i class="ti-bookmark-alt"></i>Ta requests</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" data-toggle="tab" href="#edit-profile"><i class="ti-pencil-alt"></i>Edit Profile</a>
@@ -173,6 +173,8 @@
 						<div class="col-lg-9 col-md-8 col-sm-12 m-b30">
 							<div class="profile-content-bx">
 								<div class="tab-content">
+
+
 									<div class="tab-pane active" id="courses">
 										<div class="profile-head">
 											<h3>My modules</h3>
@@ -211,7 +213,7 @@
 																	<span>Department name: </span>
 																</div>
 																<div class="cours-more-info">
-																	<a href="{{url_for('assignlecturer',coz='')}}{{modlec.module_name}}" style="width:100%" class="btn btn-success">Request Ta / Ta details</a>
+																	<a href="{{url_for('requestta',lecmodid='')}}{{modlec.id}}" style="width:100%" class="btn btn-success">Request Ta / Ta details</a>
 																</div>
 															</div>
 														</li>
@@ -223,34 +225,44 @@
 											</div>
 										</div>
 									</div>
+
+
+
+
+
+
 									<div class="tab-pane" id="quiz-results">
 										<div class="profile-head">
-											<h3>Quiz Results</h3>
+											<h3>TA Requests</h3>
 										</div>
 										<div class="courses-filter">
-											<div class="row">
-												<div class="col-md-6 col-lg-6">
-													<ul class="course-features">
-														<li><i class="ti-book"></i> <span class="label">Lectures</span> <span class="value">8</span></li>
-														<li><i class="ti-help-alt"></i> <span class="label">Quizzes</span> <span class="value">1</span></li>
-														<li><i class="ti-time"></i> <span class="label">Duration</span> <span class="value">60 hours</span></li>
-														<li><i class="ti-stats-up"></i> <span class="label">Skill level</span> <span class="value">Beginner</span></li>
-														<li><i class="ti-smallcap"></i> <span class="label">Language</span> <span class="value">English</span></li>
-														<li><i class="ti-user"></i> <span class="label">Students</span> <span class="value">32</span></li>
-														<li><i class="ti-check-box"></i> <span class="label">Assessments</span> <span class="value">Yes</span></li>
+											<div >
+												<div >
+													<ul id="masonry" class="ttr-gallery-listing magnific-image row">
+
+														{% for tarequests in tarequests %}
+	
+															<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
+																<div class="cours-bx">
+																	
+																	<div class="info-bx text-center">
+																		<h5><a href="#">Module name: {{tarequests.module_name}}</a></h5>
+																		<span>Hod email : {{tarequests.hod_email}}   </span>
+																		<span>Status : {{tarequests.request_status}}   </span>
+
+																	</div>
+																	<div class="cours-more-info">
+																		<a href="{{url_for('requestta',lecmodid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Request details</a>
+																	</div>
+																</div>
+															</li>
+	
+														{% endfor %}
+														
+														
 													</ul>
 												</div>
-												<div class="col-md-6 col-lg-6">
-													<ul class="course-features">
-														<li><i class="ti-book"></i> <span class="label">Lectures</span> <span class="value">8</span></li>
-														<li><i class="ti-help-alt"></i> <span class="label">Quizzes</span> <span class="value">1</span></li>
-														<li><i class="ti-time"></i> <span class="label">Duration</span> <span class="value">60 hours</span></li>
-														<li><i class="ti-stats-up"></i> <span class="label">Skill level</span> <span class="value">Beginner</span></li>
-														<li><i class="ti-smallcap"></i> <span class="label">Language</span> <span class="value">English</span></li>
-														<li><i class="ti-user"></i> <span class="label">Students</span> <span class="value">32</span></li>
-														<li><i class="ti-check-box"></i> <span class="label">Assessments</span> <span class="value">Yes</span></li>
-													</ul>
-												</div>
+											
 											</div>
 										</div>
 									</div>

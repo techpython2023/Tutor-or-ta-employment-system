@@ -123,6 +123,29 @@ class Modulelecture(db.Model):
     
 
 
+class Tarequest(db.Model):
+    __tablename__ ='tarequests'
+
+    id = db.Column(db.Integer,primary_key =True)
+    Lecture_email = db.Column(db.String(200),nullable=False)
+    lecture_id =db.Column(db.Integer,nullable=False)
+    modulelecture_id =db.Column(db.Integer,nullable=False)
+    module_name =db.Column(db.String(200),nullable=False)
+    module_id =db.Column(db.Integer,nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
+    hod_id =db.Column(db.Integer,nullable=False)
+    request_status =db.Column(db.String(200),nullable=False)
+    request_statusnum =db.Column(db.Integer,nullable=False)
+    request_reason =db.Column(db.String(200),nullable=False)
+
+
+
+    def __repr__(self):
+        return 'Tarequest %r' %self.id
+
+    
+
+
 @app.route('/',methods=['POST','GET'])
 def index():
     return render_template('index.html')
@@ -457,7 +480,9 @@ def hoddash():
 
             coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
 
-            return render_template('hod/hoddash.html',coz = coz)
+            tarequests = Tarequest.query.filter_by(hod_email = user).all()
+
+            return render_template('hod/hoddash.html',coz = coz,tarequests = tarequests)
         
         except:
             return 'There was an issue assigning'
@@ -472,7 +497,9 @@ def hoddash():
 
        coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
 
-       return render_template('hod/hoddash.html',coz = coz)
+       tarequests = Tarequest.query.filter_by(hod_email = user).all()
+
+       return render_template('hod/hoddash.html',coz = coz, tarequests = tarequests)
 
     
 
@@ -550,6 +577,8 @@ def lecturedash():
 
     if request.method =='POST':
 
+        user = current_user.email
+
         dep_name = request.form['dep_name'].lower()
         dep_id = request.form['dep_id']
         hod_email = request.form['hod_email']
@@ -560,11 +589,16 @@ def lecturedash():
             db.session.add(new_hod)
             db.session.commit()
 
-            hodcoz = Departmenthod.query.filter_by(hod_email ='karabo@gmail.com').all()
+            user = current_user.email
 
-            coz = Course.query.filter_by(dep_name = hodcoz.department_name).all()
+            modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
 
-            return render_template('lecture/lecturedash.html',coz = coz)
+
+
+            tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
+
+
+            return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests)
         
         except:
             return 'There was an issue assigning'
@@ -575,11 +609,186 @@ def lecturedash():
        
        user = current_user.email
 
+       tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
+
+
        modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
 
-       return render_template('lecture/lecturedash.html',modlec = modlec)
+       return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests )
 
     
+
+
+
+@app.route('/requestta',methods=['POST','GET'])
+def requestta():
+
+
+    if request.method =='POST':
+
+        cc = request.form['lecmodid']
+        recrez = request.form['reason']
+
+        user = current_user.email
+
+
+        uss = User.query.filter_by(email = user ).first()
+
+        lecid = uss.id
+        
+        modlec = Modulelecture.query.filter_by(id = cc).first()
+        modd = Module.query.filter_by(id = modlec.id).first()
+        modname = modd.name
+        modid = modd.id
+
+        coz = Course.query.filter_by(id = modd.course_id).first()
+
+        dephod=  Departmenthod.query.filter_by(department_id =coz.department_id).first()
+
+        hodemail = dephod.hod_email
+
+        usz = User.query.filter_by(email =hodemail).first()
+
+        hodid = usz.id
+
+        lec_email = uss.email
+        mod_name = modd.name
+        recrez = request.form['reason']
+
+
+
+
+        lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
+
+        try:
+            db.session.add(lec_mod)
+            db.session.commit()
+
+
+            
+            
+            user = current_user.email
+
+
+            uss = User.query.filter_by(email = user ).first()
+            url = request.url        
+            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+            cc = query_def
+            modlec = Modulelecture.query.filter_by(id = cc).all()
+
+
+        
+            return render_template('lecture/requestta.html',modlec = modlec)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+        user = current_user.email
+
+
+        uss = User.query.filter_by(email = user ).first()
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+        cc = query_def
+        modlec = Modulelecture.query.filter_by(id = cc).all()
+
+        lecmodid = cc
+
+        
+
+    
+        return render_template('lecture/requestta.html',modlec = modlec,lecmodid = lecmodid)
+
+
+
+@app.route('/approverequest',methods=['POST','GET'])
+def approverequest():
+
+
+    if request.method =='POST':
+
+        cc = request.form['lecmodid']
+        recrez = request.form['reason']
+
+        user = current_user.email
+
+
+        uss = User.query.filter_by(email = user ).first()
+
+        lecid = uss.id
+        
+        modlec = Modulelecture.query.filter_by(id = cc).first()
+        modd = Module.query.filter_by(id = modlec.id).first()
+        modname = modd.name
+        modid = modd.id
+
+        coz = Course.query.filter_by(id = modd.course_id).first()
+
+        dephod=  Departmenthod.query.filter_by(department_id =coz.department_id).first()
+
+        hodemail = dephod.hod_email
+
+        usz = User.query.filter_by(email =hodemail).first()
+
+        hodid = usz.id
+
+        lec_email = uss.email
+        mod_name = modd.name
+        recrez = request.form['reason']
+
+
+
+
+        lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
+
+        try:
+            db.session.add(lec_mod)
+            db.session.commit()
+
+
+            
+            
+            user = current_user.email
+
+
+            uss = User.query.filter_by(email = user ).first()
+            url = request.url        
+            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+            cc = query_def
+            modlec = Modulelecture.query.filter_by(id = cc).all()
+
+
+        
+            return render_template('hod/approverequest.html',modlec = modlec)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+        user = current_user.email
+
+
+        uss = User.query.filter_by(email = user ).first()
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+        cc = query_def
+        modlec = Modulelecture.query.filter_by(id = cc).all()
+
+        lecmodid = cc
+
+        
+
+    
+        return render_template('hod/approverequest.html',modlec = modlec,lecmodid = lecmodid)
+
+
 
 
 

@@ -106,6 +106,22 @@
 								
 							{% endif%}
 
+							{% if current_user.is_authenticated and current_user.userrole == 'lecture' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('lecturedash')}}">Lecture Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
+								
+							{% endif%}
+
+							{% if current_user.is_authenticated and current_user.userrole == 'hod' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('hoddash')}}">HOD Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
+								
+							{% endif%}
+
 							
 						</ul>
 						
