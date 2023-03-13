@@ -161,7 +161,7 @@
 											<a class="nav-link" data-toggle="tab" href="#quiz-results"><i class="ti-bookmark-alt"></i>Ta requests </a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#edit-profile"><i class="ti-pencil-alt"></i>Edit Profile</a>
+											<a class="nav-link" data-toggle="tab" href="#edit-profile"><i class="ti-pencil-alt"></i>Ta positions</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" data-toggle="tab" href="#change-password"><i class="ti-lock"></i>Change Password</a>
@@ -223,6 +223,9 @@
 											</div>
 										</div>
 									</div>
+
+
+
 									<div class="tab-pane" id="quiz-results">
 										<div class="profile-head">
 											<h3>TA Requests</h3>
@@ -244,7 +247,7 @@
 
 																	</div>
 																	<div class="cours-more-info">
-																		<a href="{{url_for('approverequest',lecmodid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Request details</a>
+																		<a href="{{url_for('approverequest',tarecid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Request details</a>
 																	</div>
 																</div>
 															</li>
@@ -258,122 +261,59 @@
 											</div>
 										</div>
 									</div>
+
+
+
+
+
+
+									
+
+
 									<div class="tab-pane" id="edit-profile">
 										<div class="profile-head">
-											<h3>Edit Profile</h3>
+											<h3>TA Positions</h3>
 										</div>
-										<form class="edit-profile">
-											<div class="">
-												<div class="form-group row">
-													<div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
-														<h3>1. Personal Details</h3>
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Full Name</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="Mark Andre">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Occupation</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="CTO">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Company Name</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="EduChamp">
-														<span class="help">If you want your invoices addressed to a company. Leave blank to use your full name.</span>
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Phone No.</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="+120 012345 6789">
-													</div>
-												</div>
-												
-												<div class="seperator"></div>
-												
-												<div class="form-group row">
-													<div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
-														<h3>2. Address</h3>
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Address</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="5-S2-20 Dummy City, UK">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">City</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="US">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">State</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="California">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Postcode</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="000702">
-													</div>
-												</div>
+										<div class="courses-filter">
+											<div >
+												<div >
+													<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
-												<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+														{% for taops in taops %}
+	
+															<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
+																<div class="cours-bx">
+																	
+																	<div class="info-bx text-center">
+																		<h5><a href="#">Module name: {{taops.module_name}}</a></h5>
+																		<span>Lecture email : {{taops.lecture_email}}   </span>
+																		<span>Status : {{taops.opening_status}}</span>
 
-												<div class="form-group row">
-													<div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
-														<h3 class="m-form__section">3. Social Links</h3>
-													</div>
+																	</div>
+																	<div class="cours-more-info">
+																		<a href="{{url_for('approverequest',tarecid='')}}{{taops.id}}" style="width:100%" class="btn btn-success">Request details</a>
+																	</div>
+																</div>
+															</li>
+	
+														{% endfor %}
+														
+														
+													</ul>
 												</div>
-
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Linkedin</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="www.linkedin.com">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Facebook</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="www.facebook.com">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Twitter</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="www.twitter.com">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Instagram</label>
-													<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-														<input class="form-control" type="text" value="www.instagram.com">
-													</div>
-												</div>
+											
 											</div>
-											<div class="">
-												<div class="">
-													<div class="row">
-														<div class="col-12 col-sm-3 col-md-3 col-lg-2">
-														</div>
-														<div class="col-12 col-sm-9 col-md-9 col-lg-7">
-															<button type="reset" class="btn">Save changes</button>
-															<button type="reset" class="btn-secondry">Cancel</button>
-														</div>
-													</div>
-												</div>
-											</div>
-										</form>
+										</div>
 									</div>
+
+									
+
+
+
+
+
+
+
 									<div class="tab-pane" id="change-password">
 										<div class="profile-head">
 											<h3>Change Password</h3>

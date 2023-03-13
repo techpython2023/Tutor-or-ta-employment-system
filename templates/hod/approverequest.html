@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>Tech pythons : lecture-portal </title>
+	<title>Tech pythons : hod-portal </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
@@ -91,10 +91,9 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="add-mega-menu"><a href="{{url_for('hoddash')}}">Lecture portal </a>
+							<li class="add-mega-menu"><a href="{{url_for('hoddash')}}">Hod portal </a>
 								
 							</li>
-							
 							
 						</ul>
 						
@@ -110,7 +109,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Request Tutor / TA</h1>
+                    <h1 class="text-white">Approve or Decline Tutor request / TA</h1>
 				 </div>
             </div>
         </div>
@@ -126,35 +125,75 @@
                             <div>
                             </div>
                             
-							<form action="requestta" method="POST">
+							<form action="approverequest" method="POST">
 
                                 <label>Request reason:</label>
 								
-                                <textarea class="form-control" style="height: 250px;" id="ss" name="reason" required="required" ></textarea>
+                                <textarea class="form-control" style="height: 250px;" id="ss" readonly name="reason" required="required" >{{tarecs.request_reason}}</textarea>
 
                                 <label>Lecture email:</label>
 
-                                <input type="text" disabled="disabled" value="{{ current_user.email }}" class="form-control" />
+                                <input type="text" disabled="disabled" value="{{tarecs.Lecture_email}}" class="form-control" />
 
 
                                 <label>Module name:</label>
+                             
+                                <input type="text" disabled="disabled" value="{{tarecs.module_name}}" class="form-control" />
+								<input type="hidden" id="tarecid" name="tarecid" value="{{tarecs.id}}" />
+								
 
+								<br>
+                                <br>
+								<div align="center">
+									<div class="row">
+										<div class="col">
+											<label><h1>Reasoning is valid:</h4></label>
+												<input type="radio" name="app" id="a" onclick="ck()" value="approved" required style="height:25px;width:25px" />
+										</div>
+										<div class="col">
+											<label><h1>Reasoning is invalid:</h4></label>
+												<input type="radio" name="app" id="b" onclick="ck()" value="declined" style="height:25px;width:25px" />
+										</div>
+									</div>
+								</div>
 
-                                {% for modlec in modlec %}
+								<script>
+									function ck() {
+										var checkBox = document.getElementById("a");
+										var checkBoxb = document.getElementById("b");
 
+										var apr = document.getElementById("apr");
+										var reg = document.getElementById("reg");
+						
+										if (checkBox.checked == true) {
+											apr.style.display = "block";
+											reg.style.display = "none";
+						
+										}
 
-                                <input type="text" disabled="disabled" value="{{modlec.module_name }}" class="form-control" />
+										if (checkBoxb.checked == true) {
+											reg.style.display = "block";
+											apr.style.display = "none";
 
-						        {% endfor %}
-                                
+											
+											}
+						
+										}
+										
 
-                                <input type="hidden" id="lecmodid" name="lecmodid" value="{{lecmodid}}" />
-                              
+									
+
+								</script>
+									
+								
                                 <br>
                                 <br>
 
-                                <input type="submit" value="Submit" class="btn btn-success">
-
+								<div align="center">
+									<input type="submit" value="Approve request" style="width:100%;display:none" class="btn btn-success" id="apr">
+									<input type="submit" value="Decline request" style="width:100%;background:red;display:none" class="btn btn-danger" id="reg">
+								</div>
+                               
 
                                 <hr>
 

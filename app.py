@@ -6,6 +6,8 @@ from wtforms.validators  import InputRequired, Length, ValidationError
 import getpass
 import urllib.parse
 import requests
+from flask import Flask
+from flask_mail import Mail, Message
 
 from urllib import parse
 
@@ -24,6 +26,18 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db.init_app(app)
+
+
+
+# mail= Mail(app)
+
+# app.config['MAIL_SERVER']='smtp.gmail.com'
+# app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'yourId@gmail.com'
+# app.config['MAIL_PASSWORD'] = '*****'
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+# mail = Mail(app)
 
 
 
@@ -142,6 +156,26 @@ class Tarequest(db.Model):
 
     def __repr__(self):
         return 'Tarequest %r' %self.id
+    
+
+
+
+
+class Taopening(db.Model):
+    __tablename__ ='taopenings'
+
+    id = db.Column(db.Integer,primary_key =True)
+    Tarequest_id = db.Column(db.String(200),nullable=False)
+    lecture_email =db.Column(db.Integer,nullable=False)
+    module_name =db.Column(db.String(200),nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
+    opening_status = db.Column(db.String(200),nullable=False)
+    request_statusnum =db.Column(db.Integer,nullable=False)
+    request_reason =db.Column(db.String(200),nullable=False)
+
+
+    def __repr__(self):
+        return 'Taopening %r' %self.id
 
     
 
@@ -611,7 +645,6 @@ def lecturedash():
 
        tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
 
-
        modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
 
        return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests )
@@ -628,9 +661,7 @@ def requestta():
 
         cc = request.form['lecmodid']
         recrez = request.form['reason']
-
         user = current_user.email
-
 
         uss = User.query.filter_by(email = user ).first()
 
@@ -663,10 +694,6 @@ def requestta():
         try:
             db.session.add(lec_mod)
             db.session.commit()
-
-
-            
-            
             user = current_user.email
 
 
@@ -676,8 +703,6 @@ def requestta():
             cc = query_def
             modlec = Modulelecture.query.filter_by(id = cc).all()
 
-
-        
             return render_template('lecture/requestta.html',modlec = modlec)
         
         except:
@@ -695,32 +720,78 @@ def requestta():
         query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
         cc = query_def
         modlec = Modulelecture.query.filter_by(id = cc).all()
-
         lecmodid = cc
 
-        
-
-    
         return render_template('lecture/requestta.html',modlec = modlec,lecmodid = lecmodid)
+
 
 
 
 @app.route('/approverequest',methods=['POST','GET'])
 def approverequest():
 
-
     if request.method =='POST':
 
-        cc = request.form['lecmodid']
-        recrez = request.form['reason']
-
         user = current_user.email
+
+        cc = request.form['tarecid']
+        recres = request.form['app']
+
+
+        if recres == "declined":
+
+            tareq = Tarequest.query.filter_by(id =cc).first()
+
+            tareq.request_status ="declined"
+            tareq.retuest_statusnum = 30
+
+            try:
+                db.session.commit()
+
+                
+                taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
+
+                return render_template('hod/hoddash.html',modlec = modlec, taops = taops)
+
+            except:
+
+                return "couldnt update request"
+            
+        
+
+        if recres == "approved":
+
+            tareq = Tarequest.query.filter_by(id =cc).first()
+            tareq.request_status ="request approved"
+            tareq.retuest_statusnum = 2
+
+            le = tareq.Lecture_email
+            tarid = tareq.id
+            mna = tareq.module_name
+            hemail = tareq.hod_email
+
+
+            try:
+                db.session.commit()
+
+                taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna, module_id= modid,hod_email = hemail, opening_status ="Position available", opening_statusnum = 1)
+               
+                db.session.add(taop)
+                
+                db.session.commit()
+
+
+                taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
+
+                return render_template('hod/hoddash.html',modlec = modlec, taops = taops)
+
+            except:
+                return "couldnt update request"
 
 
         uss = User.query.filter_by(email = user ).first()
 
         lecid = uss.id
-        
         modlec = Modulelecture.query.filter_by(id = cc).first()
         modd = Module.query.filter_by(id = modlec.id).first()
         modname = modd.name
@@ -749,21 +820,17 @@ def approverequest():
             db.session.add(lec_mod)
             db.session.commit()
 
-
-            
-            
             user = current_user.email
-
 
             uss = User.query.filter_by(email = user ).first()
             url = request.url        
             query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
             cc = query_def
             modlec = Modulelecture.query.filter_by(id = cc).all()
+            taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
 
 
-        
-            return render_template('hod/approverequest.html',modlec = modlec)
+            return render_template('hod/approverequest.html',modlec = modlec, taops =taops)
         
         except:
             return 'There was an issue assigning'
@@ -777,16 +844,17 @@ def approverequest():
 
         uss = User.query.filter_by(email = user ).first()
         url = request.url        
-        query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+        query_def=parse.parse_qs(parse.urlparse(url).query)['tarecid'][0]
         cc = query_def
-        modlec = Modulelecture.query.filter_by(id = cc).all()
 
-        lecmodid = cc
-
+        tarecid = cc
         
+        tarecs = Tarequest.query.filter_by(id = tarecid).first()
+
+        taops = Taopening.query.filter_by(module_name = tarecs.hod_email).all()
 
     
-        return render_template('hod/approverequest.html',modlec = modlec,lecmodid = lecmodid)
+        return render_template('hod/approverequest.html',tarecs = tarecs,taops = taops)
 
 
 
