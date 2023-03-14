@@ -93,6 +93,8 @@ class Course(db.Model):
     name = db.Column(db.String(200),nullable=False)
     department_name =db.Column(db.String(200),nullable=False)
     department_id = db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
 
     def __repr__(self):
         return 'Course %r' %self.id
@@ -105,6 +107,10 @@ class Module(db.Model):
     name = db.Column(db.String(200),nullable=False)
     course_name =db.Column(db.String(200),nullable=False)
     course_id = db.Column(db.Integer,nullable=False)
+    department_name =db.Column(db.String(200),nullable=False)
+    department_id = db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
 
     def __repr__(self):
         return 'Module %r' %self.id
@@ -117,6 +123,8 @@ class Departmenthod(db.Model):
     department_name = db.Column(db.String(200),nullable=False)
     department_id =db.Column(db.Integer,nullable=False)
     hod_email =db.Column(db.String(200),nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
 
     def __repr__(self):
         return 'Departmenthod %r' %self.id
@@ -126,10 +134,15 @@ class Modulelecture(db.Model):
     __tablename__ ='modulelectures'
 
     id = db.Column(db.Integer,primary_key =True)
-    Lecture_email = db.Column(db.String(200),nullable=False)
+    lecture_email = db.Column(db.String(200),nullable=False)
     module_name =db.Column(db.String(200),nullable=False)
     module_id =db.Column(db.Integer,nullable=False)
     lecture_id =db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
+    department_name = db.Column(db.String(200),nullable=False)
+    department_id =db.Column(db.Integer,nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
     
 
     def __repr__(self):
@@ -141,7 +154,7 @@ class Tarequest(db.Model):
     __tablename__ ='tarequests'
 
     id = db.Column(db.Integer,primary_key =True)
-    Lecture_email = db.Column(db.String(200),nullable=False)
+    lecture_email = db.Column(db.String(200),nullable=False)
     lecture_id =db.Column(db.Integer,nullable=False)
     modulelecture_id =db.Column(db.Integer,nullable=False)
     module_name =db.Column(db.String(200),nullable=False)
@@ -150,7 +163,14 @@ class Tarequest(db.Model):
     hod_id =db.Column(db.Integer,nullable=False)
     request_status =db.Column(db.String(200),nullable=False)
     request_statusnum =db.Column(db.Integer,nullable=False)
-    request_reason =db.Column(db.String(200),nullable=False)
+    request_reason =db.Column(db.String(8000),nullable=False)
+    position_responsibilities = db.Column(db.String(10000),nullable =False)
+    course_name =db.Column(db.String(200),nullable=False)
+    course_id = db.Column(db.Integer,nullable=False)
+    department_name =db.Column(db.String(200),nullable=False)
+    department_id = db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
 
 
 
@@ -171,8 +191,13 @@ class Taopening(db.Model):
     hod_email =db.Column(db.String(200),nullable=False)
     opening_status = db.Column(db.String(200),nullable=False)
     request_statusnum =db.Column(db.Integer,nullable=False)
-    request_reason =db.Column(db.String(200),nullable=False)
-
+    position_responsibilities = db.Column(db.String(10000),nullable =False)
+    course_name =db.Column(db.String(200),nullable=False)
+    course_id = db.Column(db.Integer,nullable=False)
+    department_name =db.Column(db.String(200),nullable=False)
+    department_id = db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
 
     def __repr__(self):
         return 'Taopening %r' %self.id
@@ -182,7 +207,10 @@ class Taopening(db.Model):
 
 @app.route('/',methods=['POST','GET'])
 def index():
-    return render_template('index.html')
+
+    taops = Taopening.query.filter_by(request_statusnum = 1).all()
+
+    return render_template('index.html',taops = taops)
 
 
 @app.route('/addadmin')
@@ -231,6 +259,9 @@ def login():
                 else:
 
                      return redirect(url_for('index'))
+                
+            else:
+                return render_template('account/login.html')
         
     else:
         return render_template('account/login.html')
@@ -516,7 +547,10 @@ def hoddash():
 
             tarequests = Tarequest.query.filter_by(hod_email = user).all()
 
-            return render_template('hod/hoddash.html',coz = coz,tarequests = tarequests)
+            taops = Taopening.query.filter_by(hod_email = user).all()
+
+
+            return render_template('hod/hoddash.html',coz = coz,tarequests = tarequests, taops = taops)
         
         except:
             return 'There was an issue assigning'
@@ -532,8 +566,10 @@ def hoddash():
        coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
 
        tarequests = Tarequest.query.filter_by(hod_email = user).all()
+       taops = Taopening.query.filter_by(hod_email = user).all()
 
-       return render_template('hod/hoddash.html',coz = coz, tarequests = tarequests)
+
+       return render_template('hod/hoddash.html',coz = coz, tarequests = tarequests,taops = taops)
 
     
 
@@ -769,24 +805,25 @@ def approverequest():
             tarid = tareq.id
             mna = tareq.module_name
             hemail = tareq.hod_email
+            reqrezzz = tareq.request_reason
 
 
-            try:
-                db.session.commit()
+            # try:
+            db.session.commit()
 
-                taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna, module_id= modid,hod_email = hemail, opening_status ="Position available", opening_statusnum = 1)
-               
-                db.session.add(taop)
-                
-                db.session.commit()
+            taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna,hod_email = hemail, opening_status ="Position available", request_statusnum = 1,request_reason =reqrezzz)
+            
+            db.session.add(taop)
+
+            db.session.commit()
 
 
-                taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
+            taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
 
-                return render_template('hod/hoddash.html',modlec = modlec, taops = taops)
+            return render_template('hod/hoddash.html',taops = taops)
 
-            except:
-                return "couldnt update request"
+            # except:
+            return "couldnt update request"
 
 
         uss = User.query.filter_by(email = user ).first()
@@ -810,9 +847,6 @@ def approverequest():
         lec_email = uss.email
         mod_name = modd.name
         recrez = request.form['reason']
-
-
-
 
         lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
 
@@ -846,16 +880,102 @@ def approverequest():
         url = request.url        
         query_def=parse.parse_qs(parse.urlparse(url).query)['tarecid'][0]
         cc = query_def
-
         tarecid = cc
         
         tarecs = Tarequest.query.filter_by(id = tarecid).first()
-
         taops = Taopening.query.filter_by(module_name = tarecs.hod_email).all()
-
     
         return render_template('hod/approverequest.html',tarecs = tarecs,taops = taops)
+    
 
+@app.route('/positiondetails',methods=['POST','GET'])
+def positiondetails():
+
+
+    if request.method =='POST':
+
+        cc = request.form['lecmodid']
+        recrez = request.form['reason']
+        user = current_user.email
+
+        uss = User.query.filter_by(email = user ).first()
+
+        lecid = uss.id
+        
+        modlec = Modulelecture.query.filter_by(id = cc).first()
+        modd = Module.query.filter_by(id = modlec.id).first()
+        modname = modd.name
+        modid = modd.id
+
+        coz = Course.query.filter_by(id = modd.course_id).first()
+
+        dephod=  Departmenthod.query.filter_by(department_id =coz.department_id).first()
+
+        hodemail = dephod.hod_email
+
+        usz = User.query.filter_by(email =hodemail).first()
+
+        hodid = usz.id
+
+        lec_email = uss.email
+        mod_name = modd.name
+        recrez = request.form['reason']
+
+
+
+
+        lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
+
+        try:
+            db.session.add(lec_mod)
+            db.session.commit()
+            user = current_user.email
+
+
+            uss = User.query.filter_by(email = user ).first()
+            url = request.url        
+            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+            cc = query_def
+            modlec = Modulelecture.query.filter_by(id = cc).all()
+
+            return render_template('lecture/requestta.html',modlec = modlec)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+        user = current_user.email
+
+
+        uss = User.query.filter_by(email = user ).first()
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['posid'][0]
+        cc = query_def
+        pos = Taopening.query.filter_by(id = cc).first()
+        lecmodid = cc
+
+        hodemail = pos.hod_email
+
+
+        dephod=  Departmenthod.query.filter_by(hod_email = hodemail).first()
+
+        dephodid = dephod.department_id
+
+        dep = Department.query.filter_by(id = dephodid).first()
+
+        depname = dep.name
+        facname = dep.faculty_name 
+
+
+
+
+
+
+
+        return render_template('positiondetails.html',pos= pos,depname =depname,facname = facname)
 
 
 
