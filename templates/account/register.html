@@ -72,15 +72,11 @@
 								</div>
 							</div>
 						</div>
-						{% for users in users %}
-
-
-						<h3 style="color:red"> {{users.email}} {{users.password}}</h3>
-
-						{% endfor %}
+						
 						<div class="col-lg-12 m-b30">
 							<button name="submit" type="submit" value="Submit" class="btn button-md">Sign Up</button>
-							<button name="submit" type="submit" onclick="location.href='{{url_for('index')}}'" value="Submit" class="btn button-md"> BACK TO HOME PAGE</button>
+							<a href="{{url_for('index')}}" class="btn button-md">BACK TO HOME PAGE</a>
+
 
 						</div>
 						

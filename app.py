@@ -203,6 +203,36 @@ class Taopening(db.Model):
 
     def __repr__(self):
         return 'Taopening %r' %self.id
+    
+
+
+class Positionapplication(db.Model):
+    __tablename__ ='positionapplications'
+
+    id = db.Column(db.Integer,primary_key =True)
+    Tarequest_id = db.Column(db.Integer,nullable=False)
+    lecture_email =db.Column(db.String(200),nullable=False)
+    module_name =db.Column(db.String(200),nullable=False)
+    module_id =db.Column(db.Integer,nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
+    opening_status = db.Column(db.String(200),nullable=False)
+    opening_statusnum =db.Column(db.Integer,nullable=False)
+    course_name =db.Column(db.String(200),nullable=False)
+    course_id = db.Column(db.Integer,nullable=False)
+    department_name =db.Column(db.String(200),nullable=False)
+    department_id = db.Column(db.Integer,nullable=False)
+    faculty_name =db.Column(db.String(200),nullable=False)
+    faculty_id = db.Column(db.Integer,nullable=False)
+    applicant_idnumber = db.Column(db.Integer,nullable=False)
+    applicant_marks = db.Column(db.Integer,nullable=False)
+    applicant_studentnumber = db.Column(db.Integer,nullable=False)
+    applicant_idnumber = db.Column(db.Integer,nullable=False)
+    applicant_fullnames = db.Column(db.String(200),nullable=False)
+    applicant_dutemail = db.Column(db.String(200),nullable=False)
+
+
+    def __repr__(self):
+        return 'Positionapplication %r' %self.id
 
     
 
@@ -210,7 +240,7 @@ class Taopening(db.Model):
 @app.route('/',methods=['POST','GET'])
 def index():
 
-    taops = Taopening.query.filter_by(request_statusnum = 1).all()
+    taops = Taopening.query.filter_by(opening_statusnum = 1).all()
 
     return render_template('index.html',taops = taops)
 
@@ -624,7 +654,7 @@ def assignlecturer():
         facname = modd.faculty_name
         facid = modd.faculty_id
         depname = modd.department_name
-        depid = modd.departmnt_id
+        depid = modd.department_id
         dephod = Departmenthod.query.filter_by(department_id =depid).first()
         hodemail = dephod.hod_email
 
@@ -857,7 +887,7 @@ def approverequest():
             # try:
             db.session.commit()
 
-            taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna,module_id =modid,hod_email = hemail, opening_status ="Position available", opening_statusnum = 1,request_reason =reqrezzz,position_responsibilities = posres, course_name= cozname,course_id= cozid, department_name =depname, department_id =depid,faculty_name = facname, faculty_id = facid)
+            taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna,module_id =modid,hod_email = hemail, opening_status ="Position available", opening_statusnum = 1,position_responsibilities = posres, course_name= cozname,course_id= cozid, department_name =depname, department_id =depid,faculty_name = facname, faculty_id = facid)
             
             db.session.add(taop)
 
@@ -993,10 +1023,8 @@ def positiondetails():
 
     else:
 
-        user = current_user.email
 
 
-        uss = User.query.filter_by(email = user ).first()
         url = request.url        
         query_def=parse.parse_qs(parse.urlparse(url).query)['posid'][0]
         cc = query_def
@@ -1027,6 +1055,78 @@ def positiondetails():
         return render_template('positiondetails.html',pos= pos,depname =depname,facname = facname,cozname= cozname,res =res)
 
 
+
+
+
+
+
+@app.route('/apply',methods=['POST','GET'])
+@login_required
+def apply():
+
+    if request.method =='POST':
+
+        cc = request.form['lecmodid']
+        recrez = request.form['reason']
+        user = current_user.email
+
+        uss = User.query.filter_by(email = user ).first()
+
+        lecid = uss.id
+        
+        modlec = Modulelecture.query.filter_by(id = cc).first()
+        modd = Module.query.filter_by(id = modlec.id).first()
+        modname = modd.name
+        modid = modd.id
+
+        coz = Course.query.filter_by(id = modd.course_id).first()
+
+        dephod=  Departmenthod.query.filter_by(department_id =coz.department_id).first()
+
+        hodemail = dephod.hod_email
+
+        usz = User.query.filter_by(email =hodemail).first()
+
+        hodid = usz.id
+
+        lec_email = uss.email
+        mod_name = modd.name
+        recrez = request.form['reason']
+
+
+
+
+        lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
+
+        try:
+            db.session.add(lec_mod)
+            db.session.commit()
+            user = current_user.email
+
+
+            uss = User.query.filter_by(email = user ).first()
+            url = request.url        
+            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
+            cc = query_def
+            modlec = Modulelecture.query.filter_by(id = cc).all()
+
+            return render_template('lecture/requestta.html',modlec = modlec)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+
+
+
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['posid'][0]
+        cc = query_def
+        pos = Taopening.query.filter_by(id = cc).first()
+        
+        return render_template('apply.html',pos= pos)
 
 
 

@@ -128,7 +128,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Position details</h1>
+                    <h1 class="text-white">Apply</h1>
 				 </div>
             </div>
         </div>
@@ -161,36 +161,44 @@
                                 <br>
 
 
-                                <div>
-                                    <h4>Position description</h3>
-                                </div>
-
-
-                                <div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
-                                    Lecture email : {{pos.lecture_email}}
-                                    <br>
-
-                                    Faculty : {{facname}}
-                                    <br/>
-                                    Department : {{depname}}
-
-                                    <br/>
-
-                                    Course/ Qualification : {{cozname}}
-                                </div>
-
-                                <br>
-                                <div>
-                                    <h4>Position details</h3>
-                                </div>
-								<div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
-                                    {{res}}
-                                </div>
-
                                 <br/>
 
+                                <label>Your marks for this module</label>
+
+                                <input type="range" min="0" max="100" style="height:30px" id="pi_input" class="form-control" >
+
+                                <p>Value: <output id="value"></output> %</p>
+
+                                <script>
+                                    const value = document.querySelector("#value")
+                                    const input = document.querySelector("#pi_input")
+                                    value.textContent = input.value
+                                    input.addEventListener("input", (event) => {
+                                    value.textContent = event.target.value
+                                    })
+                                </script>
+
+                                <label>Your student number</label>
+
+                                <input type="number" class="form-control" />
+                                <br>
+                                <label>Your Id Number</label>
+                                <input type="text" class="form-control" >
+                                <br>
+
+                                
+                                <label>Your full names</label>
+                                <input type="text" class="form-control" />
+                                <br>
+
+                                <label>Your dut email</label>
+
+                                <input type="email" class="form-control"/>
+
+                                <br>
+
                                 <div class="cours-more-info">
-                                    <a href="{{url_for('apply',posid='')}}{{pos.id}}" style="width:100%" class="btn btn-success">Apply for this position</a>
+                                    <a href="" style="width:100%" class="btn btn-success">Apply for this position</a>
                                 </div>
                             </div>
                            
