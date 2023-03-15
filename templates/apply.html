@@ -162,16 +162,16 @@
 
 
                                 <br/>
-
+                                <input type="hidden" name="opid" name="opid" value="{{pos.id}}"
                                 <label>Your marks for this module</label>
 
-                                <input type="range" min="0" max="100" style="height:30px" id="pi_input" class="form-control" >
+                                <input type="range" min="0" max="100" style="height:30px" id="mark" name="mark" required class="form-control" >
 
                                 <p>Value: <output id="value"></output> %</p>
 
                                 <script>
                                     const value = document.querySelector("#value")
-                                    const input = document.querySelector("#pi_input")
+                                    const input = document.querySelector("#mark")
                                     value.textContent = input.value
                                     input.addEventListener("input", (event) => {
                                     value.textContent = event.target.value
@@ -180,20 +180,20 @@
 
                                 <label>Your student number</label>
 
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" name="stnum" id="stnum" required />
                                 <br>
                                 <label>Your Id Number</label>
-                                <input type="text" class="form-control" >
+                                <input type="text" class="form-control" name="idnum" required id="idnum" >
                                 <br>
 
                                 
                                 <label>Your full names</label>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control"  name="fullname" id="fullname" required />
                                 <br>
 
                                 <label>Your dut email</label>
 
-                                <input type="email" class="form-control"/>
+                                <input type="email" class="form-control" name="dutemail" id="dutemail"/>
 
                                 <br>
 

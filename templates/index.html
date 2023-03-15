@@ -121,6 +121,14 @@
 								</li>
 								
 							{% endif%}
+							
+							{% if current_user.is_authenticated and current_user.userrole == 'student' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('tutordash')}}">Tutor Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
+								
+							{% endif%}
 
 							
 						</ul>
