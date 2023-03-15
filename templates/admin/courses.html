@@ -144,10 +144,10 @@
 
                                 <label>Select department </label>
 
-                                <select  placeholder="select department" style="width:40%" name="department_name" id="department_name">
+                                <select  placeholder="select department" style="width:40%" name="department_id" id="department_id">
 
                                     {% for departments in departments %}
-                                        <option value="{{departments.name}}">{{departments.name}}</option>
+                                        <option value="{{departments.id}}">{{departments.name}}</option>
 
                                     {% endfor %}
                                 </select>

@@ -141,10 +141,10 @@
 
                                 <label>Select course </label>
 
-                                <select  placeholder="select course" style="width:40%" name="course_name" id="course_name">
+                                <select  placeholder="select course" style="width:40%" name="course_id" id="course_id">
 
                                     {% for courses in courses %}
-                                        <option value="{{courses.name}}">{{courses.name}}</option>
+                                        <option value="{{courses.id}}">{{courses.name}}</option>
 
                                     {% endfor %}
                                 </select>
@@ -170,11 +170,7 @@
                                         <th>
                                             Course name
                                         </th>
-                                       
-
-                                        <th>
-
-                                        </th>
+                                    
                                     </tr>
 
                                     {% for modules in modules %}
@@ -189,9 +185,7 @@
 
                                         </th>
                                         
-                                        <td>
-                                            <a href="" class="btn btn-secondry">####</a> 
-                                        </td>
+                                       
                                     </tr>
 
 						            {% endfor %}

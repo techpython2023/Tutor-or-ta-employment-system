@@ -133,13 +133,20 @@
 
                                 <label>Lecture email:</label>
 
-                                <input type="text" disabled="disabled" value="{{tarecs.Lecture_email}}" class="form-control" />
+                                <input type="text" disabled="disabled" value="{{tarecs.lecture_email}}" class="form-control" />
 
 
                                 <label>Module name:</label>
                              
                                 <input type="text" disabled="disabled" value="{{tarecs.module_name}}" class="form-control" />
 								<input type="hidden" id="tarecid" name="tarecid" value="{{tarecs.id}}" />
+
+								<br>
+								<label>Position responsibilities</label>
+								<br>
+								<p>
+									{{tarecs.position_responsibilities}}
+								</p>
 								
 
 								<br>

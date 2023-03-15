@@ -91,7 +91,7 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="add-mega-menu"><a href="{{url_for('hoddash')}}">Lecture portal </a>
+							<li class="add-mega-menu"><a href="{{url_for('lecturedash')}}">Lecture portal </a>
 								
 							</li>
 							
@@ -123,20 +123,20 @@
 						
 						<div >
 
-                            <div>
-                            </div>
                             
 							<form action="requestta" method="POST">
 
+								<br>
                                 <label>Request reason:</label>
 								
                                 <textarea class="form-control" style="height: 250px;" id="ss" name="reason" required="required" ></textarea>
 
+								<br>
                                 <label>Lecture email:</label>
 
                                 <input type="text" disabled="disabled" value="{{ current_user.email }}" class="form-control" />
 
-
+								<br>
                                 <label>Module name:</label>
 
 
@@ -149,6 +149,13 @@
                                 
 
                                 <input type="hidden" id="lecmodid" name="lecmodid" value="{{lecmodid}}" />
+								
+
+								<br>
+                                <label>Position responsibilities:</label>
+
+								<textarea class="form-control" style="height: 250px;" id="posres" name="posres" required="required" ></textarea>
+
                               
                                 <br>
                                 <br>

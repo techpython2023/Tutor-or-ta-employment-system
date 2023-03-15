@@ -81,6 +81,7 @@ class Department(db.Model):
     name = db.Column(db.String(200),nullable=False)
     faculty_name =db.Column(db.String(200),nullable=False)
     faculty_id = db.Column(db.Integer,nullable=False)
+    isassigned = db.Column(db.Integer,nullable =False)
 
     def __repr__(self):
         return 'Department %r' %self.id
@@ -185,12 +186,13 @@ class Taopening(db.Model):
     __tablename__ ='taopenings'
 
     id = db.Column(db.Integer,primary_key =True)
-    Tarequest_id = db.Column(db.String(200),nullable=False)
-    lecture_email =db.Column(db.Integer,nullable=False)
+    Tarequest_id = db.Column(db.Integer,nullable=False)
+    lecture_email =db.Column(db.String(200),nullable=False)
     module_name =db.Column(db.String(200),nullable=False)
+    module_id =db.Column(db.Integer,nullable=False)
     hod_email =db.Column(db.String(200),nullable=False)
     opening_status = db.Column(db.String(200),nullable=False)
-    request_statusnum =db.Column(db.Integer,nullable=False)
+    opening_statusnum =db.Column(db.Integer,nullable=False)
     position_responsibilities = db.Column(db.String(10000),nullable =False)
     course_name =db.Column(db.String(200),nullable=False)
     course_id = db.Column(db.Integer,nullable=False)
@@ -352,10 +354,14 @@ def departments():
 
     if request.method =='POST':
         name = request.form['name']
-        faculty_name = request.form['faculty_name']
-        faculty_id = 1
+        faculty_id = request.form['faculty_id']
 
-        new_department = Department(name =name,faculty_name = faculty_name, faculty_id = faculty_id)
+        fac = Faculty.query.filter_by(id = faculty_id).first()
+
+        facname = fac.name
+
+
+        new_department = Department(name =name,faculty_name = facname, faculty_id = faculty_id,isassigned =1)
 
         try:
             db.session.add(new_department)
@@ -392,10 +398,15 @@ def courses():
 
     if request.method =='POST':
         name = request.form['name']
-        dep_name = request.form['department_name']
-        dep_id = 2
+        dep_id = request.form['department_id']
 
-        new_course = Course(name =name,department_name = dep_name,department_id=1)
+        dep = Department.query.filter_by(id = dep_id).first()
+
+        depname = dep.name
+        facname = dep.faculty_name
+        facid = dep.faculty_id 
+
+        new_course = Course(name =name,department_name = depname,department_id=dep_id, faculty_name = facname, faculty_id = facid)
 
         try:
 
@@ -424,10 +435,18 @@ def modules():
 
     if request.method =='POST':
         name = request.form['name']
-        co_name = request.form['course_name']
-        co_id = 2
+        co_id = request.form['course_id']
 
-        new_module = Module(name =name,course_name = co_name,course_id=co_id)
+        coz = Course.query.filter_by(id = co_id).first()
+
+        coname = coz.name
+        depname =  coz.department_name
+        depid = coz.department_id
+        facname = coz.faculty_name
+        facid = coz.faculty_id
+
+
+        new_module = Module(name =name,course_name = coname,course_id=co_id,department_name = depname,department_id = depid,faculty_name = facname, faculty_id = facid)
 
         try:
             db.session.add(new_module)
@@ -495,10 +514,20 @@ def departmenthods(id):
         dep_id = request.form['dep_id']
         hod_email = request.form['hod_email']
 
-        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+        dep1 = Department.query.filter_by(id = dep_id).first()
+
+        facname = dep1.faculty_name
+        facid = dep1.faculty_id
+
+
+        new_hod = Departmenthod(department_name = dep_name, department_id = dep_id, hod_email = hod_email,faculty_name =facname, faculty_id = facid)
 
         try:
             db.session.add(new_hod)
+            db.session.commit()
+
+            dep = Department.query.filter_by(id = dep_id).first()
+            dep.isassigned = 2
             db.session.commit()
 
             dephods = Departmenthod.query.all()
@@ -543,7 +572,7 @@ def hoddash():
 
             hodcoz = Departmenthod.query.filter_by(hod_email = user ).first()
 
-            coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
+            coz = Course.query.filter_by(department_id = hodcoz.department_id ).all()
 
             tarequests = Tarequest.query.filter_by(hod_email = user).all()
 
@@ -561,9 +590,9 @@ def hoddash():
        
        user = current_user.email
 
-       hodcoz = Departmenthod.query.filter_by(hod_email = user ).first()
+       dephod = Departmenthod.query.filter_by(hod_email = user ).first()
 
-       coz = Course.query.filter_by(department_name = hodcoz.department_name ).all()
+       coz = Course.query.filter_by(department_id = dephod.department_id ).all()
 
        tarequests = Tarequest.query.filter_by(hod_email = user).all()
        taops = Taopening.query.filter_by(hod_email = user).all()
@@ -585,18 +614,23 @@ def assignlecturer():
 
     if request.method =='POST':
 
-        uss = User.query.filter_by(id =request.form['lec_id']).first()
+        uss = User.query.filter_by(id = request.form['lec_id']).first()
         modd = Module.query.filter_by(id = request.form['mod_id'] ).first()
 
-        lec_email = uss.email
-        lec_id = request.form['lec_id']
-        mod_name = modd.name
-        mod_id = request.form['mod_id']
+        lecemail = uss.email
+        lecid = request.form['lec_id']
+        modname = modd.name
+        modid = modd.id
+        facname = modd.faculty_name
+        facid = modd.faculty_id
+        depname = modd.department_name
+        depid = modd.departmnt_id
+        dephod = Departmenthod.query.filter_by(department_id =depid).first()
+        hodemail = dephod.hod_email
 
 
 
-
-        lec_mod = Modulelecture(module_name = mod_name, module_id = mod_id, lecture_id = lec_id,Lecture_email=lec_email)
+        lec_mod = Modulelecture(lecture_email =lecemail ,module_name = modname, module_id =modid,lecture_id = lecid,faculty_name = facname,faculty_id = facid,department_id = depid, department_name = depname,hod_email =hodemail)
 
         try:
             db.session.add(lec_mod)
@@ -679,9 +713,11 @@ def lecturedash():
        
        user = current_user.email
 
-       tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
+       us = User.query.filter_by(email = user).first()
 
-       modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
+       tarequests = Tarequest.query.filter_by(lecture_email = user).all()
+
+       modlec = Modulelecture.query.all()
 
        return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests )
 
@@ -695,37 +731,40 @@ def requestta():
 
     if request.method =='POST':
 
-        cc = request.form['lecmodid']
+        lecmodid = request.form['lecmodid']
         recrez = request.form['reason']
+        recpozres = request.form['posres']
         user = current_user.email
 
         uss = User.query.filter_by(email = user ).first()
 
         lecid = uss.id
         
-        modlec = Modulelecture.query.filter_by(id = cc).first()
-        modd = Module.query.filter_by(id = modlec.id).first()
-        modname = modd.name
-        modid = modd.id
+        modlec = Modulelecture.query.filter_by(id = lecmodid).first()
+        modname = modlec.module_name
+        modid = modlec.module_id
+        lecid = uss.id
+        modlecid = modlec.id
+        hodemail = modlec.hod_email
+        us1 = User.query.filter_by(email = hodemail).first()
+        hodid = us1.id
+        cz = Module.query.filter_by(id = modid).first()
+        cozname = cz.course_name
+        cozid= cz.course_id
 
-        coz = Course.query.filter_by(id = modd.course_id).first()
+        depname = modlec.department_name
+        depid = modlec.department_id 
 
-        dephod=  Departmenthod.query.filter_by(department_id =coz.department_id).first()
+        facid = modlec.faculty_id
+        facname = modlec.faculty_name
 
-        hodemail = dephod.hod_email
-
-        usz = User.query.filter_by(email =hodemail).first()
-
-        hodid = usz.id
-
-        lec_email = uss.email
-        mod_name = modd.name
-        recrez = request.form['reason']
+        
 
 
 
 
-        lec_mod = Tarequest(Lecture_email = user, lecture_id = lecid, modulelecture_id = cc,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez )
+
+        lec_mod = Tarequest(lecture_email = user, lecture_id = lecid, modulelecture_id =modlecid,module_name=modname, module_id= modid,hod_email = hodemail,hod_id = hodid, request_status ="request sent", request_statusnum = 1,request_reason =recrez,position_responsibilities = recpozres, course_name =cozname, course_id = cozid,department_id = depid, department_name = depname, faculty_id = facid, faculty_name =facname)
 
         try:
             db.session.add(lec_mod)
@@ -734,10 +773,8 @@ def requestta():
 
 
             uss = User.query.filter_by(email = user ).first()
-            url = request.url        
-            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
-            cc = query_def
-            modlec = Modulelecture.query.filter_by(id = cc).all()
+            
+            modlec = Modulelecture.query.filter_by(id = modlecid).all()
 
             return render_template('lecture/requestta.html',modlec = modlec)
         
@@ -801,17 +838,26 @@ def approverequest():
             tareq.request_status ="request approved"
             tareq.retuest_statusnum = 2
 
-            le = tareq.Lecture_email
+            le = tareq.lecture_email
             tarid = tareq.id
             mna = tareq.module_name
             hemail = tareq.hod_email
             reqrezzz = tareq.request_reason
+            modid = tareq.module_id
+            posres = tareq.position_responsibilities
+            cozid = tareq.course_id
+            cozname = tareq.course_name
+            depid = tareq.department_id
+            depname = tareq.department_name
+            facname = tareq.faculty_name
+            facid = tareq.faculty_id
+
 
 
             # try:
             db.session.commit()
 
-            taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna,hod_email = hemail, opening_status ="Position available", request_statusnum = 1,request_reason =reqrezzz)
+            taop = Taopening(lecture_email = le,  Tarequest_id = tarid,   module_name = mna,module_id =modid,hod_email = hemail, opening_status ="Position available", opening_statusnum = 1,request_reason =reqrezzz,position_responsibilities = posres, course_name= cozname,course_id= cozid, department_name =depname, department_id =depid,faculty_name = facname, faculty_id = facid)
             
             db.session.add(taop)
 
@@ -967,7 +1013,9 @@ def positiondetails():
         dep = Department.query.filter_by(id = dephodid).first()
 
         depname = dep.name
-        facname = dep.faculty_name 
+        facname = dep.faculty_name
+        cozname = pos.course_name 
+        res = pos.position_responsibilities
 
 
 
@@ -975,7 +1023,8 @@ def positiondetails():
 
 
 
-        return render_template('positiondetails.html',pos= pos,depname =depname,facname = facname)
+
+        return render_template('positiondetails.html',pos= pos,depname =depname,facname = facname,cozname= cozname,res =res)
 
 
 
