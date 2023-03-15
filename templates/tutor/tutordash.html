@@ -235,27 +235,34 @@
 
 									<div class="tab-pane" id="quiz-results">
 										<div class="profile-head">
-											<h3>TA Requests</h3>
+											<h3>My interviews</h3>
 										</div>
 										<div class="courses-filter">
 											<div >
 												<div >
 													<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
-														{% for tarequests in tarequests %}
+														{% for inters in inters %}
 	
 															<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
 																<div class="cours-bx">
 																	
 																	<div class="info-bx text-center">
-																		<h5><a href="#">Module name: {{tarequests.module_name}}</a></h5>
-																		<span>Hod email : {{tarequests.hod_email}}   </span>
-																		<span>Status : {{tarequests.request_status}}   </span>
+																		<h5><a href="#">Module name: {{inters.module_name}}</a></h5>
+																		<br>
+																		<span>Lecture email : {{inters.lecture_email}}</span>
+																		<br>
+																		<span>Student email : {{inters.applicant_email}}</span>
+																		<br>
+
+																		<span>Module name : {{inters.module_name}}</span>
+																		<br>
+																		<span>Venue : {{inters.venue}}</span>
+																		<br>
+																		<span>Date /time : {{inters.datetime}}</span>
 
 																	</div>
-																	<div class="cours-more-info">
-																		<a href="{{url_for('requestta',lecmodid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Request details</a>
-																	</div>
+																	
 																</div>
 															</li>
 	
@@ -268,6 +275,9 @@
 											</div>
 										</div>
 									</div>
+
+
+
 									<div class="tab-pane" id="edit-profile">
 										<div class="profile-head">
 											<h3>Edit Profile</h3>
@@ -384,6 +394,9 @@
 											</div>
 										</form>
 									</div>
+
+
+
 									<div class="tab-pane" id="change-password">
 										<div class="profile-head">
 											<h3>Change Password</h3>

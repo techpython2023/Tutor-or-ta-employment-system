@@ -164,8 +164,9 @@
 											<a class="nav-link" data-toggle="tab" href="#edit-profile"><i class="ti-pencil-alt"></i>Ta positions</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#change-password"><i class="ti-lock"></i>Change Password</a>
+											<a class="nav-link" data-toggle="tab" href="#change-password"><i class="ti-pencil-alt"></i>My Interviews</a>
 										</li>
+										
 									</ul>
 								</div>
 							</div>
@@ -319,44 +320,53 @@
 
 									<div class="tab-pane" id="change-password">
 										<div class="profile-head">
-											<h3>Change Password</h3>
+											<h3>My Interviews</h3>
 										</div>
-										<form class="edit-profile">
-											<div class="">
-												<div class="form-group row">
-													<div class="col-12 col-sm-8 col-md-8 col-lg-9 ml-auto">
-														<h3>Password</h3>
-													</div>
+										<div class="courses-filter">
+											<div >
+												<div >
+													<ul id="masonry" class="ttr-gallery-listing magnific-image row">
+
+														{% for inters in inters %}
+	
+															<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
+																<div class="cours-bx">
+																	
+																	<div class="info-bx text-center">
+																		<h5><a href="#">Module name: {{inters.module_name}}</a></h5>
+																		<br>
+																		<span>Lecture email : {{inters.lecture_email}}</span>
+																		<br>
+																		<span>Student email : {{inters.applicant_email}}</span>
+																		<br>
+
+																		<span>Module name : {{inters.module_name}}</span>
+																		<br>
+																		<span>Venue : {{inters.venue}}</span>
+																		<br>
+																		<span>Date /time : {{inters.datetime}}</span>
+
+
+
+
+
+
+																	</div>
+																	<div class="cours-more-info">
+																		<a href="{{url_for('approverequest',tarecid='')}}{{taops.id}}" style="width:100%" class="btn btn-success">Details</a>
+																	</div>
+																</div>
+															</li>
+	
+														{% endfor %}
+														
+														
+													</ul>
 												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Current Password</label>
-													<div class="col-12 col-sm-8 col-md-8 col-lg-7">
-														<input class="form-control" type="password" value="">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">New Password</label>
-													<div class="col-12 col-sm-8 col-md-8 col-lg-7">
-														<input class="form-control" type="password" value="">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Re Type New Password</label>
-													<div class="col-12 col-sm-8 col-md-8 col-lg-7">
-														<input class="form-control" type="password" value="">
-													</div>
-												</div>
+											
 											</div>
-											<div class="row">
-												<div class="col-12 col-sm-4 col-md-4 col-lg-3">
-												</div>
-												<div class="col-12 col-sm-8 col-md-8 col-lg-7">
-													<button type="reset" class="btn">Save changes</button>
-													<button type="reset" class="btn-secondry">Cancel</button>
-												</div>
-											</div>
-												
-										</form>
+										</div>
+										
 									</div>
 								</div> 
 							</div>
