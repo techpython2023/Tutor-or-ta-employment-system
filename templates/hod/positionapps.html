@@ -3,9 +3,11 @@
 
 <head>
 
-	<title>Tech pythons : position details </title>
+	<title>Tech pythons : Hod </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	
 	
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/assets.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/typography.css')}}">
@@ -89,30 +91,12 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							{% if current_user.is_authenticated and current_user.userrole == 'admin' %}
-							
-								<li class="nav-dashboard"><a href="{{url_for('admin')}}">Admin Dashboard <i class="fa fa-chevron-down"></i></a>
-									
-								</li>
+							<li class="active"><a href="{{url_for('hoddash')}}">Hod portal </a>
 								
-							{% endif%}
-
-							{% if current_user.is_authenticated and current_user.userrole == 'lecture' %}
+							</li>
 							
-								<li class="nav-dashboard"><a href="{{url_for('lecturedash')}}">Lecture Dashboard <i class="fa fa-chevron-down"></i></a>
-									
-								</li>
-								
-							{% endif%}
-
-							{% if current_user.is_authenticated and current_user.userrole == 'hod' %}
 							
-								<li class="nav-dashboard"><a href="{{url_for('hoddash')}}">HOD Dashboard <i class="fa fa-chevron-down"></i></a>
-									
-								</li>
-								
-							{% endif%}
-
+							
 							
 						</ul>
 						
@@ -128,7 +112,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Apply</h1>
+                    <h1 class="text-white">Position applications</h1>
 				 </div>
             </div>
         </div>
@@ -138,74 +122,84 @@
             <!-- About Us -->
 			<div class="section-area section-sp1">
                 <div class="container">
+					 <div >
 						
 						<div >
+							<div class="profile-content-bx">
+								<div class="tab-content">
+									<div class="tab-pane active" id="courses">
+										<div class="profile-head">
+											<h3>Applications</h3>
+											<div class="feature-filters style1 ml-auto">
+												<ul class="filters" data-toggle="buttons">
+													<li data-filter="" class="btn active">
+														<input type="radio">
+														<a href="#"><span>All</span></a> 
+													</li>
+													<li data-filter="publish" class="btn">
+														<input type="radio">
+														<a href="#"><span>Publish</span></a> 
+													</li>
+													<li data-filter="pending" class="btn">
+														<input type="radio">
+														<a href="#"><span>Pending</span></a> 
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div class="courses-filter">
+											<div class="clearfix">
 
-                            <div>
-                            </div>
+												
+                                    
 
-                            <form action="apply" method="POST">
-								<div>
+												<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
-									<div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
+													{% for posapps in posapps %}
 
-										<h4>Module name:</h4>
+														<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
+															<div class="cours-bx">
+																
+																<div class="info-bx text-center">
+																	<h6><a href="#">Name : {{posapps.applicant_fullnames}}</a></h6>
+																	
+                                                                    <br>
 
-											<h6>
-												{{pos.module_name}}
-											</h6>
+																	<span>Id number: {{posapps.applicant_idnumber}}</span>
+                                                                    <br>
+																	<span>Student number: {{posapps.applicant_studentnumber}}</span>
+                                                                    <br>
+																	<span>Student email: {{posapps.applicant_dutemail}}</span>
+                                                                    <br>
+
+                              
+																	<span>Dep name: {{posapps.department_name}}</span>
+                                                                    <br>
+                                                                    <span style="color:red">Module marks: {{posapps.applicant_marks}} %</span>
+
+																</div>
+																<div class="cours-more-info">
+																	<a href="{{url_for('scheduleinterview',appid='')}}{{posapps.id}}" style="width:100%" class="btn btn-success">Schedule interview</a>
+																</div>
+															</div>
+														</li>
+
+						            				{% endfor %}
+													
+													
+												</ul>
+											</div>
+										</div>
 									</div>
-								
 
 
-									<br>
 
 
-									<br/>
-									<input type="hidden" name="opid" name="opid" value="{{pos.id}}"
-									<label>Your marks for this module</label>
 
-									<input type="range" min="0" max="100" style="height:30px" id="mark" name="mark"  class="form-control" >
-
-									<p>Value: <output id="value"></output> %</p>
-
-									<script>
-										const value = document.querySelector("#value")
-										const input = document.querySelector("#mark")
-										value.textContent = input.value
-										input.addEventListener("input", (event) => {
-										value.textContent = event.target.value
-										})
-									</script>
-
-									<label>Your student number</label>
-
-									<input type="number" class="form-control" name="stnum" id="stnum" required />
-									<br>
-									<label>Your Id Number</label>
-									<input type="text" class="form-control" name="idnum" required id="idnum" >
-									<br>
-
-									
-									<label>Your full names</label>
-									<input type="text" class="form-control"  name="fullname" id="fullname" required />
-									<br>
-
-									<label>Your dut email</label>
-
-									<input type="email" class="form-control" name="dutemail" id="dutemail"/>
-
-									<br>
-
-									<div class="cours-more-info">
-										<input type="submit" value="Submit application" style="width:100%" onclick="form.submit()" class="btn btn-success"/>
-									</div>
-									
-								</div>
-
-							</form>
-                           
+								</div> 
+							</div>
 						</div>
+					</div>
 				</div>
             </div>
         </div>

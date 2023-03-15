@@ -128,7 +128,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Apply</h1>
+                    <h1 class="text-white">Schedule interview</h1>
 				 </div>
             </div>
         </div>
@@ -149,10 +149,10 @@
 
 									<div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
 
-										<h4>Module name:</h4>
+										<h4>Applicant marks:</h4>
 
 											<h6>
-												{{pos.module_name}}
+												{{posapp.applicant_marks}} %
 											</h6>
 									</div>
 								
@@ -162,43 +162,19 @@
 
 
 									<br/>
-									<input type="hidden" name="opid" name="opid" value="{{pos.id}}"
-									<label>Your marks for this module</label>
+									<input type="hidden" name="appid" name="appid" value="{{posapp.id}}"/>
+									
 
-									<input type="range" min="0" max="100" style="height:30px" id="mark" name="mark"  class="form-control" >
+									<label>Interview date:</label>
 
-									<p>Value: <output id="value"></output> %</p>
-
-									<script>
-										const value = document.querySelector("#value")
-										const input = document.querySelector("#mark")
-										value.textContent = input.value
-										input.addEventListener("input", (event) => {
-										value.textContent = event.target.value
-										})
-									</script>
-
-									<label>Your student number</label>
-
-									<input type="number" class="form-control" name="stnum" id="stnum" required />
+									<input type="datetime-local" class="form-control" name="stnum" id="stnum" required />
 									<br>
-									<label>Your Id Number</label>
+									<label>Venue (eg: RITSON CAMPAS ROOM DB002) :</label>
 									<input type="text" class="form-control" name="idnum" required id="idnum" >
 									<br>
 
-									
-									<label>Your full names</label>
-									<input type="text" class="form-control"  name="fullname" id="fullname" required />
-									<br>
-
-									<label>Your dut email</label>
-
-									<input type="email" class="form-control" name="dutemail" id="dutemail"/>
-
-									<br>
-
 									<div class="cours-more-info">
-										<input type="submit" value="Submit application" style="width:100%" onclick="form.submit()" class="btn btn-success"/>
+										<input type="submit" value="Submit schedule" style="width:100%" onclick="form.submit()" class="btn btn-success"/>
 									</div>
 									
 								</div>

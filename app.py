@@ -229,13 +229,35 @@ class Positionapplication(db.Model):
     applicant_dutemail = db.Column(db.String(200),nullable=False)
     status = db.Column(db.String(200),nullable=False)
     status_num = db.Column(db.Integer,nullable=False)
-    applicant_loginemail =db.Column(db.String(200),nullable=False)
+    applicant_email =db.Column(db.String(200),nullable=False)
 
 
 
 
     def __repr__(self):
         return 'Positionapplication %r' %self.id
+    
+
+
+
+class Applicationinterview(db.Model):
+    __tablename__ ='applicationinterviews'
+
+    id = db.Column(db.Integer,primary_key =True)
+    Tarequest_id = db.Column(db.Integer,nullable=False)
+    position_id = db.Column(db.Integer,nullable=False)
+    lecture_email =db.Column(db.String(200),nullable=False)
+    module_name =db.Column(db.String(200),nullable=False)
+    module_id =db.Column(db.Integer,nullable=False)
+    hod_email =db.Column(db.String(200),nullable=False)
+    applicant_dutemail = db.Column(db.String(200),nullable=False)
+    status = db.Column(db.String(200),nullable=False)
+    status_num = db.Column(db.Integer,nullable=False)
+    applicant_email =db.Column(db.String(200),nullable=False)
+    venue =db.Column(db.String(200),nullable=False)
+
+    def __repr__(self):
+        return 'Applicationinterview %r' %self.id
 
     
 
@@ -1069,7 +1091,7 @@ def apply():
 
     if request.method =='POST':
 
-        posid = request.form['posid']
+        posid = request.form['opid']
 
         pos = Taopening.query.filter_by(id = posid).first()
 
@@ -1082,7 +1104,7 @@ def apply():
         
         
 
-        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullname = fullname,applicant_dutemail = dutemail,status = 'application received',statusnum =1,applicant_loginemail = user )
+        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullnames = fullname,applicant_dutemail = dutemail,status = 'application received',status_num =1,applicant_email = user )
 
         try:
             db.session.add(pos_app)
@@ -1156,13 +1178,90 @@ def tutordash():
 
        us = User.query.filter_by(email = user).first()
 
+       posapps = Positionapplication.query.filter_by(applicant_email = user).all() 
        tarequests = Tarequest.query.filter_by(lecture_email = user).all()
 
        modlec = Modulelecture.query.all()
 
-       return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests )
+       return render_template('tutor/tutordash.html',modlec = modlec,tarequests = tarequests, posapps = posapps )
 
     
+
+
+
+@app.route('/positionapps',methods=['POST','GET'])
+def positionapps():
+       
+       posapps = Positionapplication.query.all()
+    
+
+
+       return render_template('hod/positionapps.html',posapps = posapps)
+
+   
+
+
+
+
+
+
+@app.route('/scheduleinterview',methods=['POST','GET'])
+def scheduleinterview():
+
+    if request.method =='POST':
+
+        user = current_user.email
+
+        dep_name = request.form['dep_name'].lower()
+        dep_id = request.form['dep_id']
+        hod_email = request.form['hod_email']
+
+        new_hod = Applicationinterview(department_name = dep_name, department_id = dep_id, hod_email = hod_email)
+
+        try:
+            db.session.add(new_hod)
+            db.session.commit()
+
+            user = current_user.email
+
+            modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
+
+
+
+            tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
+
+
+            return render_template('tutor/tutordash.html',modlec = modlec,tarequests = tarequests)
+        
+        except:
+            return 'There was an issue assigning'
+
+
+
+    else:
+       
+       user = current_user.email
+
+       us = User.query.filter_by(email = user).first()
+
+       url = request.url        
+       query_def=parse.parse_qs(parse.urlparse(url).query)['appid'][0]
+       cc = query_def
+
+       posapp = Positionapplication.query.filter_by(id = cc).first() 
+     
+
+       return render_template('hod/scheduleinterview.html',posapp = posapp)
+
+
+
+
+
+    
+
+
+
+
 
 
 

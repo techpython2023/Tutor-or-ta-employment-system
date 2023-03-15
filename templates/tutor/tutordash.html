@@ -91,7 +91,7 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="active"><a href="{{url_for('lecturedash')}}">Lecture portal </a>
+							<li class="active"><a href="{{url_for('tutordash')}}">Tutor portal </a>
 								
 							</li>
 							
@@ -124,7 +124,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Lecture portal</h1>
+                    <h1 class="text-white">Tutor portal</h1>
 				 </div>
             </div>
         </div>
@@ -141,7 +141,7 @@
 									<img src="assets/images/profile/pic1.jpg" alt=""/>
 								</div>
 								<div class="profile-info">
-									<h4>LECTURE</h4>
+									<h4>TUTOR / STUDENT</h4>
 									<span>{{ current_user.email }}</span>
 								</div>
 								<div class="profile-social">
@@ -155,10 +155,10 @@
 								<div class="profile-tabnav">
 									<ul class="nav nav-tabs">
 										<li class="nav-item">
-											<a class="nav-link active" data-toggle="tab" href="#courses"><i class="ti-book"></i>Modules</a>
+											<a class="nav-link active" data-toggle="tab" href="#courses"><i class="ti-book"></i>My applications</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" data-toggle="tab" href="#quiz-results"><i class="ti-bookmark-alt"></i>Ta requests</a>
+											<a class="nav-link" data-toggle="tab" href="#quiz-results"><i class="ti-bookmark-alt"></i>My interviews</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" data-toggle="tab" href="#edit-profile"><i class="ti-pencil-alt"></i>Edit Profile</a>
@@ -177,7 +177,7 @@
 
 									<div class="tab-pane active" id="courses">
 										<div class="profile-head">
-											<h3>My modules</h3>
+											<h3>My applications</h3>
 											<div class="feature-filters style1 ml-auto">
 												<ul class="filters" data-toggle="buttons">
 													<li data-filter="" class="btn active">
@@ -203,14 +203,16 @@
 
 												<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
-													{% for modlec in modlec %}
+													{% for posapps in posapps %}
 
 														<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
 															<div class="cours-bx">
 																
 																<div class="info-bx text-center">
-																	<h5><a href="#">Module name: {{modlec.module_name}}</a></h5>
-																	<span>Department name: </span>
+																	<h5><a href="#">Module name: {{posapps.module_name}}</a></h5>
+																	<span>Department name:  {{posapps.department_name}} </span>
+																	<span>Status:  {{posapps.status}} </span>
+
 																</div>
 																<div class="cours-more-info">
 																	<a href="{{url_for('requestta',lecmodid='')}}{{modlec.id}}" style="width:100%" class="btn btn-success">Request Ta / Ta details</a>
