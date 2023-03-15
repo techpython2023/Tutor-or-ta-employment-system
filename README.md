@@ -19,10 +19,10 @@ Features:
 
 
 
-•	TA request process – Started today(12 march 2023)
+•	TA request process – Finished
 
 
-•	Application process – Not started
+•	Application process – Started
 
 	
 •	Appointment process –Not started
