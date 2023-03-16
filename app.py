@@ -289,10 +289,7 @@ def index():
     taops = Taopening.query.filter_by(opening_statusnum = 1).all()
 
 
-    msg = Message('Hello', sender = 'techpythons2023@outlook.com', recipients = ['radebesandile67@gmail.com'])
-    msg.body = "Hello Flask message sent from Flask-Mail"
-    mail.send(msg)
-    return "Sent"
+   
 
     return render_template('index.html',taops = taops)
 
