@@ -230,7 +230,6 @@ class Positionapplication(db.Model):
     status = db.Column(db.String(200),nullable=False)
     status_num = db.Column(db.Integer,nullable=False)
     applicant_email =db.Column(db.String(200),nullable=False)
-    ratingscrore = db.Column(db.Integer,nullable=False)
 
 
 
@@ -1118,7 +1117,7 @@ def apply():
         
         
 
-        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullnames = fullname,applicant_dutemail = dutemail,status = 'application received',status_num =1,applicant_email = user,ratingscrore =0 )
+        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullnames = fullname,applicant_dutemail = dutemail,status = 'application received',status_num =1,applicant_email = user )
 
         try:
             db.session.add(pos_app)
