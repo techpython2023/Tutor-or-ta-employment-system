@@ -3,11 +3,9 @@
 
 <head>
 
-	<title>Tech pythons : Admin-modules </title>
+	<title>Tech pythons : position details </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	
 	
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/assets.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/typography.css')}}">
@@ -91,25 +89,30 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
-							<li class="active"><a href="{{url_for('admin')}}">Admin portal </a>
-								
-							</li>
+							{% if current_user.is_authenticated and current_user.userrole == 'admin' %}
 							
-							<li class="add-mega-menu"><a href="{{url_for('faculties')}}">Faculties</a>
+								<li class="nav-dashboard"><a href="{{url_for('admin')}}">Admin Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
 								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('departments')}}">Departments</a>
+							{% endif%}
+
+							{% if current_user.is_authenticated and current_user.userrole == 'lecture' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('lecturedash')}}">Lecture Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
 								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('courses')}}">Courses</a>
+							{% endif%}
+
+							{% if current_user.is_authenticated and current_user.userrole == 'hod' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('hoddash')}}">HOD Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
 								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('modules')}}">Modules</a>
-								
-							</li>
-							<li class="add-mega-menu"><a href="{{url_for('staff')}}">Staff</a>
-								
-							</li>
+							{% endif%}
+
 							
 						</ul>
 						
@@ -125,7 +128,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Modules</h1>
+                    <h1 class="text-white">Rate Ta / Tutor </h1>
 				 </div>
             </div>
         </div>
@@ -139,71 +142,65 @@
 						<div >
 
                             <div>
-                                <h2>Add module</h2>
                             </div>
-							<form action="modules" method="POST">
-                                <label>Module name: </label>
-                                <input type="text" required class="form-control" placeholder="Module name"  name="name" id="name" />
 
-                                <label>Select course </label>
+                            <form action="rateta" method="POST">
+								<div>
 
-                                <select  placeholder="select course" style="width:40%" name="course_id" id="course_id">
+									<div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
 
-                                    {% for courses in courses %}
-                                        <option value="{{courses.id}}">{{courses.name}}</option>
+										<h4>Ta email:</h4>
 
-                                    {% endfor %}
-                                </select>
-
-                              
-                                <br>
-                                <br>
-
-                                <input type="submit" value="Submit" class="btn btn-success">
+											<h6>
+												{{taapp.applicant_email}}
+											</h6>
+									</div>
+								
 
 
-                                <hr>
+									<br>
 
+                                    <input type="hidden" value="{{taapp.applicant_email}}" name="taemail" id="taemail"/>
+									<br/>
+									<input type="hidden" name="opid" name="opid" value="{{taapp.id}}"
+									<label>Please rate services provived by the tutor,
+                                        <br> Do services provided by the tutor helps you understand and pass the module,
+                                    <br>
+                                        How likely would you recomend the totor to other students
+                                   </label>
 
-                                <h3>
-                                    List of modules
-                                </h3>
-                                <table>
-                                    <tr>
-                                        <th>
-                                            Module name
-                                        </th>
-                                        <th>
-                                            Course name
-                                        </th>
-                                    
-                                    </tr>
+									<input type="range" min="0" max="100" style="height:30px" id="score" name="score"  class="form-control" >
 
-                                    {% for modules in modules %}
+									<p>Value: <output id="value"></output> %</p>
 
-                                    <tr>
+									<script>
+										const value = document.querySelector("#value")
+										const input = document.querySelector("#mark")
+										value.textContent = input.value
+										input.addEventListener("input", (event) => {
+										value.textContent = event.target.value
+										})
+									</script>
 
-                                        <td>
-                                            {{modules.name}}
-                                        </td>
-                                        <th>
-                                            {{modules.course_name}}
+									<label>Your student number</label>
 
-                                        </th>
-                                        
-                                       
-                                    </tr>
+									<input type="number" class="form-control" name="stnum" id="stnum" required />
+									<br>
+									
+									<label>Your full names</label>
+									<input type="text" class="form-control"  name="fullname" id="fullname" required />
+									<br>
 
-						            {% endfor %}
-                                    
-                                    
-                                </table>
-                                
+									
 
+									<div class="cours-more-info">
+										<input type="submit" value="Submit ta rating" style="width:100%" onclick="form.submit()" class="btn btn-success"/>
+									</div>
+									
+								</div>
 
-
-
-                            </form>
+							</form>
+                           
 						</div>
 				</div>
             </div>

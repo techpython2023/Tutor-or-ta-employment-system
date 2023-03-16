@@ -191,32 +191,29 @@
 												<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
 
-													{% for ops in ops %}
+													{% for taops in ops %}
 													
 													<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
 														<div class="cours-bx">
-															<div class="action-box">
-																<img src="assets/images/courses/pic1.jpg" alt="">
-																<a href="#" class="btn">Read More</a>
-															</div>
+															
 															<div class="info-bx text-center">
-																<h5><a href="#">Introduction EduChamp – LMS plugin</a></h5>
-																<span>Programming</span>
+																<h6><a href="#">Module name : {{taops.module_name}}</a></h6>
+																<br>
+																	<span>Lecture email : {{taops.lecture_email}}</span>
+																	<br>
+																	<span>Status : {{taops.opening_status}}</span>
 															</div>
 															<div class="cours-more-info">
 																<div class="review">
-																	<span>3 Review</span>
+																	<span>Minimum mark</span>
 																	<ul class="cours-star">
-																		<li class="active"><i class="fa fa-star"></i></li>
-																		<li class="active"><i class="fa fa-star"></i></li>
-																		<li class="active"><i class="fa fa-star"></i></li>
-																		<li><i class="fa fa-star"></i></li>
-																		<li><i class="fa fa-star"></i></li>
+																		<p style="color:red">50%</p>
 																	</ul>
 																</div>
 																<div class="price">
-																	<del>$190</del>
-																	<h5>$120</h5>
+																	<p style="font-size:8px;">
+																		Min requirement <br>
+																		{{taops.course_name}}</p>
 																</div>
 															</div>
 														</div>

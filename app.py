@@ -274,6 +274,7 @@ class Tarating(db.Model):
     module_id =db.Column(db.Integer,nullable=False)
     hod_email =db.Column(db.String(200),nullable=False)
     applicant_email =db.Column(db.String(200),nullable=False)
+    score = db.Column(db.Integer,nullable=False)
    
 
     def __repr__(self):
@@ -764,11 +765,11 @@ def lecturedash():
 
             user = current_user.email
 
-            modlec = Modulelecture.query.filter_by(Lecture_email = user ).all()
+            modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
 
 
 
-            tarequests = Tarequest.query.filter_by(Lecture_email = user).all()
+            tarequests = Tarequest.query.filter_by(lecture_email = user).all()
 
             return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests)
         
@@ -785,7 +786,8 @@ def lecturedash():
 
        tarequests = Tarequest.query.filter_by(lecture_email = user).all()
 
-       modlec = Modulelecture.query.all()
+       modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
+
 
        return render_template('lecture/lecturedash.html',modlec = modlec,tarequests = tarequests )
 
@@ -1202,7 +1204,12 @@ def tutordash():
 @app.route('/positionapps',methods=['POST','GET'])
 def positionapps():
        
-       posapps = Positionapplication.query.all()
+
+       url = request.url        
+       query_def=parse.parse_qs(parse.urlparse(url).query)['tarecid'][0]
+       cc = query_def
+
+       posapps = Positionapplication.query.filter_by(Tarequest_id =cc).all()
     
 
 
@@ -1257,6 +1264,93 @@ def scheduleinterview():
        posapp = Positionapplication.query.filter_by(id = cc).first() 
        return render_template('hod/scheduleinterview.html',posapp = posapp)
 
+
+
+
+
+@app.route('/searchmodule',methods=['POST','GET'])
+def searchmodule():
+
+    if request.method =='POST':
+
+        tutoremail = request.form['tutoremail']
+        
+
+
+
+        try:
+            
+            posapp = Positionapplication.query.filter_by(applicant_email = tutoremail ).first()
+
+            pid =str(posapp.id)
+
+
+            return redirect('rateta?id='+ pid)
+
+        except:
+            return 'Please confirm email'
+
+
+    else:
+       
+       
+
+       url = request.url        
+       query_def=parse.parse_qs(parse.urlparse(url).query)['id'][0]
+       cc = query_def
+       posapp = Positionapplication.query.filter_by(id = cc).first()
+
+       return 'Please confirm email'
+
+
+
+
+
+@app.route('/rateta',methods=['POST','GET'])
+def rateta():
+
+    if request.method =='POST':
+
+        score = request.form['score']
+        stnum = request.form['stnum']
+        fullname = request.form['fullname']
+        possappid = request.form['opid']
+        taemail = request.form['taemail']
+        
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['id'][0]
+        cc = query_def
+        posapp = Positionapplication.query.filter_by(id = cc).first()
+
+
+        app_inter = Tarating(Tarequest_id = posapp.Tarequest_id,position_applicationid = posapp.id,lecture_email= posapp.lecture_email,module_name = posapp.module_name,module_id= posapp.module_id,hod_email = posapp.hod_email, applicant_dutemail = posapp.applicant_dutemail,status ='interview secheduled',status_num =1,applicant_email =posapp.applicant_email,venue=venue, datetime =datetime)
+
+        try:
+            db.session.add(app_inter)
+            db.session.commit()
+
+            user = current_user.email
+
+            modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
+
+            tarequests = Tarequest.query.filter_by(lecture_email = user).all()
+
+            return redirect(url_for('hoddash'))
+
+        except:
+            return 'There was an issue assigning'
+
+
+    else:
+       
+       
+
+       url = request.url        
+       query_def=parse.parse_qs(parse.urlparse(url).query)['id'][0]
+       cc = query_def
+       taapp = Positionapplication.query.filter_by(id = cc).first()
+
+       return render_template('rateta.html',taapp = taapp)
 
 
 
