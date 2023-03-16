@@ -385,7 +385,11 @@ def forget_password():
 @app.route('/admin')
 @login_required
 def admin():
-    return render_template('admin/admin.html')
+
+    ops = Taopening.query.all() 
+
+
+    return render_template('admin/admin.html',ops= ops)
 
 
 
@@ -1235,7 +1239,6 @@ def scheduleinterview():
     if request.method =='POST':
 
         user = current_user.email
-
         appid = request.form['appid']
         venue = request.form['venue']
         datetime = request.form['date']
