@@ -29,15 +29,15 @@ db.init_app(app)
 
 
 
-# mail= Mail(app)
+mail= Mail(app)
 
-# app.config['MAIL_SERVER']='smtp.gmail.com'
-# app.config['MAIL_PORT'] = 465
-# app.config['MAIL_USERNAME'] = 'yourId@gmail.com'
-# app.config['MAIL_PASSWORD'] = '*****'
-# app.config['MAIL_USE_TLS'] = False
-# app.config['MAIL_USE_SSL'] = True
-# mail = Mail(app)
+app.config['MAIL_SERVER']='smtp-mail.outlook.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'techpythons2023@outlook.com'
+app.config['MAIL_PASSWORD'] = 'Pythons@123'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 
 
@@ -267,12 +267,12 @@ class Tarating(db.Model):
     __tablename__ ='taratings'
 
     id = db.Column(db.Integer,primary_key =True)
-    Tarequest_id = db.Column(db.Integer,nullable=False)
     position_applicationid = db.Column(db.Integer,nullable=False)
     lecture_email =db.Column(db.String(200),nullable=False)
-    module_name =db.Column(db.String(200),nullable=False)
     module_id =db.Column(db.Integer,nullable=False)
     hod_email =db.Column(db.String(200),nullable=False)
+    fullname =db.Column(db.String(200),nullable=False)
+    student_number =db.Column(db.String(200),nullable=False)
     applicant_email =db.Column(db.String(200),nullable=False)
     score = db.Column(db.Integer,nullable=False)
    
@@ -287,6 +287,12 @@ class Tarating(db.Model):
 def index():
 
     taops = Taopening.query.filter_by(opening_statusnum = 1).all()
+
+
+    msg = Message('Hello', sender = 'techpythons2023@outlook.com', recipients = ['radebesandile67@gmail.com'])
+    msg.body = "Hello Flask message sent from Flask-Mail"
+    mail.send(msg)
+    return "Sent"
 
     return render_template('index.html',taops = taops)
 
@@ -1322,20 +1328,13 @@ def rateta():
         cc = query_def
         posapp = Positionapplication.query.filter_by(id = cc).first()
 
-
-        app_inter = Tarating(Tarequest_id = posapp.Tarequest_id,position_applicationid = posapp.id,lecture_email= posapp.lecture_email,module_name = posapp.module_name,module_id= posapp.module_id,hod_email = posapp.hod_email, applicant_dutemail = posapp.applicant_dutemail,status ='interview secheduled',status_num =1,applicant_email =posapp.applicant_email,venue=venue, datetime =datetime)
+        app_inter = Tarating(fullname =fullname,student_number=stnum,position_applicationid = possappid,lecture_email =posapp.lecture_email,module_id=posapp.module_id,hod_email =posapp.hod_email,applicant_email= taemail, score=score)
 
         try:
             db.session.add(app_inter)
             db.session.commit()
 
-            user = current_user.email
-
-            modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
-
-            tarequests = Tarequest.query.filter_by(lecture_email = user).all()
-
-            return redirect(url_for('hoddash'))
+            return redirect(url_for('index'))
 
         except:
             return 'There was an issue assigning'
@@ -1356,6 +1355,37 @@ def rateta():
 
 
     
+
+
+@app.route('/appoint',methods=['POST','GET'])
+def appoint():
+
+
+        
+        
+        url = request.url        
+        query_def=parse.parse_qs(parse.urlparse(url).query)['id'][0]
+        cc = query_def
+
+        inter = Applicationinterview.query.filter_by(id = cc).first()
+        inter.status ="applicant appointed"
+        inter.status_num =2
+        db.session.commit()
+        posapp = Positionapplication.query.filter_by(id =inter.position_applicationid).first()
+        posapp.status = "appointed"
+        posapp.status_num =2
+        db.session.commit()
+        taop = Taopening.query.filter_by(Tarequest_id = posapp.Tarequest_id).first()
+        taop.opening_statusnum = 2
+        taop.status ="application closed"
+        db.session.commit()
+
+
+        return redirect('hoddash')
+
+
+
+   
 
 
 
