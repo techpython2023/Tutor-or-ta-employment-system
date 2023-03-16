@@ -1242,8 +1242,6 @@ def scheduleinterview():
 
             return redirect(url_for('hoddash'))
 
-
-        
         except:
             return 'There was an issue assigning'
 
