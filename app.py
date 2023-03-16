@@ -716,19 +716,8 @@ def assignlecturer():
         try:
             db.session.add(lec_mod)
             db.session.commit()
-            
-            url = request.url        
-            query_def=parse.parse_qs(parse.urlparse(url).query)['coz'][0]
-            cc = query_def
 
-            modlec = Modulelecture.query.all()
-
-            mod = Module.query.filter_by(course_name = cc ).all()
-
-            lecs = User.query.filter_by(userrole ='lecture').all()
-
-
-            return render_template('hod/assignlecturer.html',modlec = modlec,lecs= lecs,mod = mod)
+            return render_template('hod/hoddash.html')
         
         except:
             return 'There was an issue assigning'
@@ -1129,20 +1118,14 @@ def apply():
         
         
 
-        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullnames = fullname,applicant_dutemail = dutemail,status = 'application received',status_num =1,applicant_email = user )
+        pos_app = Positionapplication(Tarequest_id = pos.id,lecture_email = pos.lecture_email, module_name = pos.module_name, module_id = pos.module_id,hod_email = pos.hod_email, course_name = pos.course_name,course_id = pos.course_id,department_name = pos.department_name, department_id = pos.department_id,faculty_name = pos.faculty_name, faculty_id = pos.faculty_id,applicant_idnumber =idnum, applicant_marks = mark ,applicant_studentnumber = stnum,applicant_fullnames = fullname,applicant_dutemail = dutemail,status = 'application received',status_num =1,applicant_email = user,ratingscrore =0 )
 
         try:
             db.session.add(pos_app)
             db.session.commit()
             user = current_user.email
 
-            uss = User.query.filter_by(email = user ).first()
-            url = request.url        
-            query_def=parse.parse_qs(parse.urlparse(url).query)['lecmodid'][0]
-            cc = query_def
-            modlec = Modulelecture.query.filter_by(id = cc).all()
-
-            return render_template('lecture/requestta.html',modlec = modlec)
+            return redirect(url_for('tutordash'))
         
         except:
             return 'There was an issue assigning'
@@ -1247,20 +1230,22 @@ def scheduleinterview():
 
         app_inter = Applicationinterview(Tarequest_id = posapp.Tarequest_id,position_applicationid = posapp.id,lecture_email= posapp.lecture_email,module_name = posapp.module_name,module_id= posapp.module_id,hod_email = posapp.hod_email, applicant_dutemail = posapp.applicant_dutemail,status ='interview secheduled',status_num =1,applicant_email =posapp.applicant_email,venue=venue, datetime =datetime)
 
-        # try:
-        db.session.add(app_inter)
-        db.session.commit()
+        try:
+            db.session.add(app_inter)
+            db.session.commit()
 
-        user = current_user.email
+            user = current_user.email
 
-        modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
+            modlec = Modulelecture.query.filter_by(lecture_email = user ).all()
 
-        tarequests = Tarequest.query.filter_by(lecture_email = user).all()
+            tarequests = Tarequest.query.filter_by(lecture_email = user).all()
 
-        return render_template('hod/hoddash.html',modlec = modlec,tarequests = tarequests)
+            return redirect(url_for('hoddash'))
+
+
         
-        # except:
-        return 'There was an issue assigning'
+        except:
+            return 'There was an issue assigning'
 
 
     else:
