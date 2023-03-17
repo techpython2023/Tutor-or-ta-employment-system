@@ -93,7 +93,7 @@
 								
 							</li>
 							
-							<li class="add-mega-menu"><a href="javascript:;">Tutor openings<i class="fa fa-chevron-down"></i></a>
+							<li class="add-mega-menu"><a href="{{url_for('openings')}}">Tutor openings<i class="fa fa-chevron-down"></i></a>
 								
 							</li>
 							
@@ -217,7 +217,7 @@
 								data-paddingbottom="[10,10,10,10]"
 								data-paddingleft="[0,0,0,0]"
 								style="z-index: 6; font-family:rubik; font-weight:700; text-align:center; white-space: normal;">
-									Welcome To ....
+									Welcome To dut TA / TUTOR appoinment system
 							</div>
 
 							<!-- LAYER NR. 3 -->
@@ -239,7 +239,7 @@
 								data-paddingbottom="[0,0,0,0]"
 								data-paddingleft="[0,0,0,0]"
 								style="z-index: 7; white-space: nowrap; color:#fff; font-family:rubik; font-size:18px; font-weight:400;">
-									Better appoinment and  
+									Better appoinment and better education  
 							</div>
 							
 							<!-- LAYER NR. 3 -->
@@ -484,34 +484,33 @@
 						</div>
 					</div>
 					<div class="testimonial-carousel owl-carousel owl-btn-1 col-12 p-lr0">
-						<div class="item">
-							<div class="testimonial-bx">
-								<div class="testimonial-thumb">
-									<img src="assets/images/testimonials/pic1.jpg" alt="">
-								</div>
-								<div class="testimonial-info">
-									<h5 class="name">Peter Packer</h5>
-									<p>-Art Director</p>
-								</div>
-								<div class="testimonial-content">
-									<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type...</p>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="testimonial-bx">
-								<div class="testimonial-thumb">
-									<img src="assets/images/testimonials/pic2.jpg" alt="">
-								</div>
-								<div class="testimonial-info">
-									<h5 class="name">Peter Packer</h5>
-									<p>-Art Director</p>
-								</div>
-								<div class="testimonial-content">
-									<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type...</p>
+
+
+						{% for tar in tar %}
+							<div class="item">
+								<div class="testimonial-bx">
+									<div class="testimonial-thumb">
+										<img src="assets/images/testimonials/pic1.jpg" alt="">
+									</div>
+									<div class="testimonial-info">
+										<h5 class="name">{{tar.fullname}}</h5>
+										<p style="color:red">Rating score : {{tar.score}} % </p>
+									</div>
+									<div class="testimonial-content">
+										<p>
+											<label>Rating createria :</label>
+											<br>
+											Please rate services provived by the tutor,
+												<br> Do services provided by the tutor helps you understand and pass the module,
+											<br>
+												How likely would you recomend the totor to other students
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
+						{% endfor %}
+						
+						
 					</div>
 				</div>
 			</div>

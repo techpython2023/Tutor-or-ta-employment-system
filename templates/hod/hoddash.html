@@ -344,7 +344,7 @@
 																		<br>
 																		<span>Venue : {{inters.venue}}</span>
 																		<br>
-																		<span>Date /time : {{inters.datetime}}</span>
+																		<span>Date /time  : {{inters.datetime}}</span>
 
 
 
@@ -353,7 +353,11 @@
 
 																	</div>
 																	<div class="cours-more-info">
-																		<a href="{{url_for('appoint',tarecid='')}}{{taops.id}}" style="width:100%" class="btn btn-success">Appoint tutor</a>
+
+																		{% if inters.status_num == 1 %}
+																			<a href="{{url_for('appoint',id='')}}{{inters.position_applicationid}}" style="width:100%" class="btn btn-success">Appoint tutor</a>
+
+																		{% endif %}
 																	</div>
 																</div>
 															</li>

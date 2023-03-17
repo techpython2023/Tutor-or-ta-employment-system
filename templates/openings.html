@@ -3,9 +3,11 @@
 
 <head>
 
-	<title>Tech pythons : position details </title>
+	<title>Tech pythons : Hod </title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	
 	
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/assets.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/typography.css')}}">
@@ -28,7 +30,7 @@
 <div class="page-wraper">
 	<div id="loading-icon-bx"></div>
     <!-- Header Top ==== -->
-    <header class="header rs-nav header-transparent">
+	<header class="header rs-nav header-transparent">
 		<div class="top-bar">
 			<div class="container">
 				<div class="row d-flex justify-content-between">
@@ -89,6 +91,15 @@
 							<a href="#"><img src="assets/images/logo.png" alt=""></a>
 						</div>
                         <ul class="nav navbar-nav">	
+							<li class="active"><a href="{{url_for('index')}}">Home <i class="fa fa-chevron-down"></i></a>
+								
+							</li>
+							
+							<li class="add-mega-menu"><a href="{{url_for('openings')}}">Tutor openings<i class="fa fa-chevron-down"></i></a>
+								
+							</li>
+							
+
 							{% if current_user.is_authenticated and current_user.userrole == 'admin' %}
 							
 								<li class="nav-dashboard"><a href="{{url_for('admin')}}">Admin Dashboard <i class="fa fa-chevron-down"></i></a>
@@ -112,6 +123,14 @@
 								</li>
 								
 							{% endif%}
+							
+							{% if current_user.is_authenticated and current_user.userrole == 'student' %}
+							
+								<li class="nav-dashboard"><a href="{{url_for('tutordash')}}">Tutor Dashboard <i class="fa fa-chevron-down"></i></a>
+									
+								</li>
+								
+							{% endif%}
 
 							
 						</ul>
@@ -128,7 +147,7 @@
         <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
             <div class="container">
                 <div class="page-banner-entry">
-                    <h1 class="text-white">Rate Ta / Tutor </h1>
+                    <h1 class="text-white">Ta openings</h1>
 				 </div>
             </div>
         </div>
@@ -138,71 +157,44 @@
             <!-- About Us -->
 			<div class="section-area section-sp1">
                 <div class="container">
+
+
+					<div class="tab-pane" id="edit-profile">
 						
-						<div >
+						<div class="courses-filter">
+							<div >
+								<div >
+									<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 
-                            <div>
-                            </div>
+										{% for taops in taops %}
 
-                            <form action="rateta" method="POST">
-								<div>
+											<li class="action-card col-xl-4 col-lg-6 col-md-12 col-sm-6 publish">
+												<div class="cours-bx">
+													
+													<div class="info-bx text-center">
+														<h5><a href="#">Module name: {{taops.module_name}}</a></h5>
+														<span>Lecture email : {{taops.lecture_email}}   </span>
+														<span>Status : {{taops.opening_status}}</span>
 
-									<div class="col-sm" style="background-color:antiquewhite;border-radius:10px;">
-
-										<h4>Ta email:</h4>
-
-											<h6>
-												{{taapp.applicant_email}}
-											</h6>
-									</div>
-								
+													</div>
 
 
-									<br>
-									
+													<div class="cours-more-info">
+														<a href="{{url_for('positiondetails',posid='')}}{{taops.id}}" style="width:100%" class="btn btn-success">Details</a>
+													</div>
+												</div>
+											</li>
 
-                                    <input type="hidden" value="{{taapp.applicant_email}}" name="taemail" id="taemail"/>
-									<br/>
-									<input type="hidden" name="id" name="id" value="{{taapp.id}}"
-									<label>Please rate services provived by the tutor,
-                                        <br> Do services provided by the tutor helps you understand and pass the module,
-                                    <br>
-                                        How likely would you recomend the totor to other students
-                                   </label>
-
-									<input type="range" min="0" max="100" style="height:30px" id="score" name="score"  class="form-control" >
-
-									<p>Value: <output id="value"></output> %</p>
-
-									<script>
-										const value = document.querySelector("#value")
-										const input = document.querySelector("#mark")
-										value.textContent = input.value
-										input.addEventListener("input", (event) => {
-										value.textContent = event.target.value
-										})
-									</script>
-
-									<label>Your student number</label>
-
-									<input type="number" class="form-control" name="stnum" id="stnum" required />
-									<br>
-									
-									<label>Your full names</label>
-									<input type="text" class="form-control"  name="fullname" id="fullname" required />
-									<br>
-
-									
-
-									<div class="cours-more-info">
-										<input type="submit" value="Submit ta rating" style="width:100%" onclick="form.submit()" class="btn btn-success"/>
-									</div>
-									
+										{% endfor %}
+										
+										
+									</ul>
 								</div>
-
-							</form>
-                           
+							
+							</div>
 						</div>
+					</div>
+					
 				</div>
             </div>
         </div>

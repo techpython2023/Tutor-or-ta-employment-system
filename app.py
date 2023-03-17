@@ -8,6 +8,9 @@ import urllib.parse
 import requests
 from flask import Flask
 from flask_mail import Mail, Message
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from urllib import parse
 
@@ -24,20 +27,9 @@ from urllib import parse
 db = SQLAlchemy() # db intitialized here
 app = Flask(__name__)
 app.secret_key = "super secret key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.db"
 db.init_app(app)
 
-
-
-mail= Mail(app)
-
-app.config['MAIL_SERVER']='smtp-mail.outlook.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'techpythons2023@outlook.com'
-app.config['MAIL_PASSWORD'] = 'Pythons@123'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
 
 
 
@@ -286,12 +278,16 @@ class Tarating(db.Model):
 @app.route('/',methods=['POST','GET'])
 def index():
 
+    
+
     taops = Taopening.query.filter_by(opening_statusnum = 1).all()
+
+    tar = Tarating.query.all()
 
 
    
 
-    return render_template('index.html',taops = taops)
+    return render_template('index.html',taops = taops,tar =tar)
 
 
 @app.route('/addadmin')
@@ -678,6 +674,7 @@ def hoddash():
        coz = Course.query.filter_by(department_id = dephod.department_id ).all()
 
        tarequests = Tarequest.query.filter_by(hod_email = user).all()
+       
        taops = Taopening.query.filter_by(hod_email = user).all()
        inters = Applicationinterview.query.all()
 
@@ -938,6 +935,42 @@ def approverequest():
 
 
             taops = Taopening.query.filter_by(module_name = tareq.hod_email).all()
+
+
+
+
+
+
+
+
+            msg = MIMEMultipart()
+
+# set the sender, recipient, subject, and body of the message
+            msg['From'] = 'info@techafrika.co.za'
+            msg['To'] = le
+            msg['Subject'] = 'Ta request approved'
+            body = 'Hello, Please note that your TA request has been approved '
+
+            # attach the body of the email to the message object
+            msg.attach(MIMEText(body, 'plain'))
+
+            # create a SMTP connection object to your email provider's server
+            smtp_server = 'mail.techafrika.co.za'
+            smtp_port = 587
+            smtp_username = 'info@techafrika.co.za'
+            smtp_password = 'TsELB,;?y2'
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.sendmail(msg['From'], msg['To'], msg.as_string())
+            server.quit()
+
+
+
+
+
+
+
 
             return render_template('hod/hoddash.html',taops = taops)
 
@@ -1249,6 +1282,40 @@ def scheduleinterview():
 
             tarequests = Tarequest.query.filter_by(lecture_email = user).all()
 
+
+
+
+
+
+
+            msg = MIMEMultipart()
+
+# set the sender, recipient, subject, and body of the message
+            msg['From'] = 'info@techafrika.co.za'
+            msg['To'] = posapp.applicant_dutemail
+            msg['Subject'] = 'Application inter view scheduled'
+            body = 'Hello, Please note you have an interview for the position you applied for <br>venue: ' + venue +'  date: '+ datetime
+
+            # attach the body of the email to the message object
+            msg.attach(MIMEText(body, 'html'))
+
+            # create a SMTP connection object to your email provider's server
+            smtp_server = 'mail.techafrika.co.za'
+            smtp_port = 587
+            smtp_username = 'info@techafrika.co.za'
+            smtp_password = 'TsELB,;?y2'
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.sendmail(msg['From'], msg['To'], msg.as_string())
+            server.quit()
+
+
+
+
+
+
+
             return redirect(url_for('hoddash'))
 
         except:
@@ -1317,13 +1384,11 @@ def rateta():
         score = request.form['score']
         stnum = request.form['stnum']
         fullname = request.form['fullname']
-        possappid = request.form['opid']
+        possappid = request.form['id']
         taemail = request.form['taemail']
         
-        url = request.url        
-        query_def=parse.parse_qs(parse.urlparse(url).query)['id'][0]
-        cc = query_def
-        posapp = Positionapplication.query.filter_by(id = cc).first()
+       
+        posapp = Positionapplication.query.filter_by(id = possappid).first()
 
         app_inter = Tarating(fullname =fullname,student_number=stnum,position_applicationid = possappid,lecture_email =posapp.lecture_email,module_id=posapp.module_id,hod_email =posapp.hod_email,applicant_email= taemail, score=score)
 
@@ -1374,17 +1439,98 @@ def appoint():
         db.session.commit()
         taop = Taopening.query.filter_by(Tarequest_id = posapp.Tarequest_id).first()
         taop.opening_statusnum = 2
-        taop.status ="application closed"
+        taop.opening_status ="application closed"
         db.session.commit()
+
+        tr = Tarequest.query.filter_by(id = taop.Tarequest_id).first()
+        tr.request_status = "ta appointed"
+        tr.request_statusnum =2
+        db.session.commit()
+
+
+
+        msg = MIMEMultipart()
+
+# set the sender, recipient, subject, and body of the message
+        msg['From'] = 'info@techafrika.co.za'
+        msg['To'] = posapp.applicant_dutemail
+        msg['Subject'] = 'Techpythons Interview successfully'
+        body = 'Hello, Please note your interview is successfull and you have been appointed as the tutor for : ' + posapp.module_name
+
+        # attach the body of the email to the message object
+        msg.attach(MIMEText(body, 'html'))
+
+        # create a SMTP connection object to your email provider's server
+        smtp_server = 'mail.techafrika.co.za'
+        smtp_port = 587
+        smtp_username = 'info@techafrika.co.za'
+        smtp_password = 'TsELB,;?y2'
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+        server.sendmail(msg['From'], msg['To'], msg.as_string())
+        server.quit()
+
+
+
+
+
 
 
         return redirect('hoddash')
 
 
 
-   
+@app.route('/openings',methods=['POST','GET'])
+def openings():
+       
+
+    taops = Taopening.query.all()
+    
+    return render_template('openings.html',taops = taops)
 
 
+@app.route('/tadetails',methods=['POST','GET'])
+def tadetails():
+
+    url = request.url        
+    query_def=parse.parse_qs(parse.urlparse(url).query)['tarecid'][0]
+    cc = query_def
+       
+
+    taapp = Positionapplication.query.filter_by(Tarequest_id = cc).first() 
+    tar = Tarating.query.filter_by(position_applicationid = taapp.id).all()
+
+    a = 0
+
+    
+
+    p =0
+
+    for tar in tar:
+        if tar.score > 50:
+            p =p+1
+
+    n =0
+    
+    tar2 = Tarating.query.filter_by(position_applicationid = taapp.id).all()
+    
+    for tar2 in tar2:
+        if tar2.score < 50:
+            n =n+1
+
+    tar3 = Tarating.query.filter_by(position_applicationid = taapp.id).all()
+    
+    for tar3 in tar3:
+        a =a+1
+    
+    p1 = (p/a)*100
+
+    n1 =(n/a)*100
+                 
+     
+    
+    return render_template('lecture/tadetails.html',p1 =p1, n1=n1, a=a,tap=taapp)
 
 
 

@@ -210,7 +210,7 @@
 																
 																<div class="info-bx text-center">
 																	<h5><a href="#">Module name: {{modlec.module_name}}</a></h5>
-																	<span>Department name: </span>
+																	<span>Department name: {{modlec.department_name}} </span>
 																</div>
 																<div class="cours-more-info">
 																	<a href="{{url_for('requestta',lecmodid='')}}{{modlec.id}}" style="width:100%" class="btn btn-success">Request Ta / Ta details</a>
@@ -252,7 +252,11 @@
 
 																	</div>
 																	<div class="cours-more-info">
-																		<a href="{{url_for('requestta',lecmodid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Request details</a>
+
+																		{% if tarequests.request_statusnum == 1 %}
+																		<a href="{{url_for('tadetails',tarecid='')}}{{tarequests.id}}" style="width:100%" class="btn btn-success">Ta details</a>
+
+																		{% endif %}
 																	</div>
 																</div>
 															</li>
