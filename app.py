@@ -315,34 +315,41 @@ def login():
 
 
     if request.method =='POST':
-        user_email = request.form['email'].lower()
-        user_password = request.form['password']
-        user = User.query.filter_by(email = user_email).first()
-        
-        if user:
-            if user.password == user_password:
 
-                login_user(user)
+        try:
+            user_email = request.form['email'].lower()
+            user_password = request.form['password']
+            user = User.query.filter_by(email = user_email).first()
+            
+            if user:
+                if user.password == user_password:
+
+                    login_user(user)
+                        
+                    if user.userrole == 'admin':
+                        return redirect(url_for('admin'))
                     
-                if user.userrole == 'admin':
-                    return redirect(url_for('admin'))
-                
-                if user.userrole == 'hod':
-                    return redirect(url_for('hoddash'))
-                
-                if user.userrole == 'lecture':
-                    return redirect(url_for('lecturedash'))
+                    if user.userrole == 'hod':
+                        return redirect(url_for('hoddash'))
+                    
+                    if user.userrole == 'lecture':
+                        return redirect(url_for('lecturedash'))
 
+                    else:
+
+                        return redirect(url_for('index'))
+                    
                 else:
-
-                     return redirect(url_for('index'))
+                    return render_template('account/login.html')
                 
-            else:
-                return render_template('account/login.html')
-        
+        except:
+             return render_template('account/login.html')
+
+
+            
     else:
         return render_template('account/login.html')
-
+       
 
 @app.route("/logout")
 @login_required
