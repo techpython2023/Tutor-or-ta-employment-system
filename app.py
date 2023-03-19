@@ -965,7 +965,7 @@ def approverequest():
             smtp_server = 'mail.techafrika.co.za'
             smtp_port = 587
             smtp_username = 'info@techafrika.co.za'
-            smtp_password = 'TsELB,;?y2'
+            smtp_password = ''
             server = smtplib.SMTP(smtp_server, smtp_port)
             server.starttls()
             server.login(smtp_username, smtp_password)
@@ -1310,7 +1310,7 @@ def scheduleinterview():
             smtp_server = 'mail.techafrika.co.za'
             smtp_port = 587
             smtp_username = 'info@techafrika.co.za'
-            smtp_password = 'TsELB,;?y2'
+            smtp_password = ''
             server = smtplib.SMTP(smtp_server, smtp_port)
             server.starttls()
             server.login(smtp_username, smtp_password)
@@ -1471,7 +1471,7 @@ def appoint():
         smtp_server = 'mail.techafrika.co.za'
         smtp_port = 587
         smtp_username = 'info@techafrika.co.za'
-        smtp_password = 'TsELB,;?y2'
+        smtp_password = ''
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
         server.login(smtp_username, smtp_password)
